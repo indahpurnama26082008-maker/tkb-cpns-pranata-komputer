@@ -9,6 +9,13 @@
 
 <link href="dashboard.css" rel="stylesheet"/></head>
 <body>
+
+<script>
+if(localStorage.getItem('cpns-logged')!=='1'){
+  window.location.href='index.html';
+}
+</script>
+
 <nav class="navbar">
 <a class="nav-logo" href="dashboard.html"><i class="fas fa-laptop-code"></i><span>TKB CPNS</span></a>
 <div class="nav-links">

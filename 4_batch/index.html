@@ -177,7 +177,7 @@ function doLogin() {
 
   // Animate then redirect
   document.querySelector('.btn-login').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat...';
-  setTimeout(() => { window.location.href = 'index.html'; }, 800);
+  setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
 }
 
 // Enter key support
@@ -195,7 +195,7 @@ function loginGoogle() {
     const name = 'Pengguna Google';
     localStorage.setItem('cpns-profile', JSON.stringify({ name, role: 'Peserta CPNS' }));
     localStorage.setItem('cpns-logged', '1');
-    window.location.href = 'index.html';
+    window.location.href = 'dashboard.html';
   }, 1000);
 }
 
@@ -204,7 +204,7 @@ function loginBelajar() {
     const name = 'Pengguna Belajar.id';
     localStorage.setItem('cpns-profile', JSON.stringify({ name, role: 'Peserta CPNS' }));
     localStorage.setItem('cpns-logged', '1');
-    window.location.href = 'index.html';
+    window.location.href = 'dashboard.html';
   }, 800);
 }
 
