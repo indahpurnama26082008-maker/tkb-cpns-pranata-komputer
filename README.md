@@ -18,7 +18,22 @@ Website simulasi ujian TKB CPNS Pranata Komputer berbasis HTML, CSS, dan JavaScr
 - JavaScript
 
 📸 Preview
-Tambahkan screenshot project di sini nanti.
+## 📸 Preview
+
+### Dashboard
+![Dashboard](ss/dashboard.png)
+
+### Login
+![Login](ss/loginn.png)
+
+### Profile
+![Profile](ss/profile.png)
+
+### Riwayat Pengerjaan
+![Riwayat](ss/riwayat pengerjaan.png)
+
+### Soal
+![Soal](ss/soal-soal.png)
 
 🚀 Cara Menjalankan
 1. Download project
