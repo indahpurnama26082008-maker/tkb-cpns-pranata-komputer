@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard TKB CPNS – Pranata Komputer</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+
+<link href="dashboard.css" rel="stylesheet"/></head>
+<body>
+<nav class="navbar">
+<a class="nav-logo" href="dashboard.html"><i class="fas fa-laptop-code"></i><span>TKB CPNS</span></a>
+<div class="nav-links">
+<button class="nav-link active" onclick="showSection('home')"><i class="fas fa-home"></i> Dashboard</button>
+<button class="nav-link" onclick="showSection('history')"><i class="fas fa-history"></i> Riwayat Nilai</button>
+<button class="nav-link" onclick="showSection('settings')"><i class="fas fa-cog"></i> Pengaturan</button>
+</div>
+<div class="nav-right">
+<button class="theme-btn" onclick="toggleDark()" title="Ganti tema"><i class="fas fa-moon" id="theme-icon"></i></button>
+<div class="profile-chip" id="profile-chip" onclick="toggleDropdown()">
+<div class="profile-avatar" id="avatar-initials">A</div>
+<div><div class="profile-name" id="nav-username">Pengguna</div><div class="profile-role">Peserta CPNS</div></div>
+<i class="fas fa-chevron-down" style="font-size:.7rem;color:var(--muted);margin-left:4px;"></i>
+<div class="profile-dropdown" id="dropdown">
+<div class="dropdown-item" onclick="openProfileModal()"><i class="fas fa-user"></i> Edit Profil</div>
+<div class="dropdown-item" onclick="showSection('history')"><i class="fas fa-chart-bar"></i> Riwayat Nilai</div>
+<div class="dropdown-sep"></div>
+<div class="dropdown-item" onclick="showSection('settings')"><i class="fas fa-cog"></i> Pengaturan</div>
+<div class="dropdown-item" onclick="goLogin()"><i class="fas fa-sign-out-alt"></i> Keluar</div>
+<div class="dropdown-item" onclick="clearAllData()" style="color:var(--danger)"><i class="fas fa-trash" style="color:var(--danger)"></i> Hapus Data</div>
+</div>
+</div>
+</div>
+</nav>
+<div class="breadcrumb-bar" id="breadcrumb">
+<i class="fas fa-home"></i>
+<span class="bc-link" onclick="showSection('home')">Dashboard</span>
+<span id="bc-sep" style="display:none">›</span>
+<span id="bc-current"></span>
+</div>
+<div class="container">
+<!-- HOME -->
+<div id="section-home">
+<div class="hero">
+<div class="hero-icon">🎓</div>
+<div class="hero-text">
+<h1>Selamat Datang, <span id="hero-username">Pengguna</span>!</h1>
+<p>Latihan soal TKB CPNS Pranata Komputer. Pilih sesi di bawah untuk mulai berlatih dan raih nilai terbaik kamu.</p>
+</div>
+<div class="hero-stats">
+<div class="hero-stat"><div class="hero-stat-val" id="stat-done">0</div><div class="hero-stat-lbl">Sesi Selesai</div></div>
+<div class="hero-stat"><div class="hero-stat-val" id="stat-avg">—</div><div class="hero-stat-lbl">Rata-rata Skor</div></div>
+<div class="hero-stat"><div class="hero-stat-val">4</div><div class="hero-stat-lbl">Total Sesi</div></div>
+</div>
+</div>
+<!-- MINI STAT CARDS -->
+<div class="mini-stats" id="mini-stats-grid">
+<div class="mini-card c1">
+<div class="mini-card-icon"><i class="fas fa-check-circle"></i></div>
+<div><div class="mini-card-val" id="ms-done">0</div><div class="mini-card-lbl">Sesi Selesai</div></div>
+</div>
+<div class="mini-card c2">
+<div class="mini-card-icon"><i class="fas fa-star"></i></div>
+<div><div class="mini-card-val" id="ms-avg">—</div><div class="mini-card-lbl">Rata-rata Nilai</div></div>
+</div>
+<div class="mini-card c3">
+<div class="mini-card-icon"><i class="fas fa-chart-line"></i></div>
+<div><div class="mini-card-val" id="ms-progress">0%</div><div class="mini-card-lbl">Progress Belajar</div></div>
+</div>
+<div class="mini-card c4">
+<div class="mini-card-icon"><i class="fas fa-trophy"></i></div>
+<div><div class="mini-card-val" id="ms-best">—</div><div class="mini-card-lbl">Nilai Terbaik</div></div>
+</div>
+<div class="mini-card c5">
+<div class="mini-card-icon"><i class="fas fa-times-circle"></i></div>
+<div><div class="mini-card-val" id="ms-wrong">—</div><div class="mini-card-lbl">Total Jawaban Salah</div></div>
+</div>
+<div class="mini-card c6">
+<div class="mini-card-icon"><i class="fas fa-bullseye"></i></div>
+<div><div class="mini-card-val" id="ms-accuracy">—</div><div class="mini-card-lbl">Akurasi Jawaban</div></div>
+</div>
+</div>
+<div class="section-header">
+<h2><i class="fas fa-layer-group" style="color:var(--accent);margin-right:8px;"></i>Sesi Latihan Soal</h2>
+<span class="section-badge">4 Sesi Tersedia</span>
+</div>
+<div class="grid" id="sessions-grid"></div>
+</div>
+<!-- HISTORY -->
+<div id="section-history" style="display:none">
+<div class="section-header" style="margin-top:8px">
+<h2><i class="fas fa-chart-line" style="color:var(--accent);margin-right:8px;"></i>Riwayat Nilai</h2>
+</div>
+<div class="history-section">
+<div class="history-table">
+<div class="history-summary" id="history-summary" style="display:none">
+<div class="sum-item"><span class="sum-icon">📊</span><div><div class="sum-val" id="sum-sessions">0</div><div class="sum-lbl">Sesi Dikerjakan</div></div></div>
+<div class="sum-item"><span class="sum-icon">✅</span><div><div class="sum-val" id="sum-correct" style="color:#059669">0</div><div class="sum-lbl">Total Benar</div></div></div>
+<div class="sum-item"><span class="sum-icon">❌</span><div><div class="sum-val" id="sum-wrong" style="color:#dc2626">0</div><div class="sum-lbl">Total Salah</div></div></div>
+<div class="sum-item"><span class="sum-icon">🎯</span><div><div class="sum-val" id="sum-avg" style="color:var(--accent)">—</div><div class="sum-lbl">Rata-rata Seluruh Sesi</div></div></div>
+<div class="sum-item"><span class="sum-icon">🏆</span><div><div class="sum-val" id="sum-accuracy" style="color:#8b5cf6">—</div><div class="sum-lbl">Akurasi Keseluruhan</div></div></div>
+</div>
+<div class="history-row header">
+<span>Sesi</span>
+<span>Skor</span>
+<span>Benar / Salah</span>
+<span class="h-col-hide">Akurasi</span>
+<span class="h-col-hide">Tanggal</span>
+</div>
+<div id="history-body"></div>
+</div>
+</div>
+</div>
+<!-- SETTINGS -->
+<div id="section-settings" style="display:none">
+<div class="section-header" style="margin-top:8px">
+<h2><i class="fas fa-cog" style="color:var(--accent);margin-right:8px;"></i>Pengaturan</h2>
+</div>
+<div style="background:var(--card);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);max-width:520px">
+<div class="input-group">
+<label>Nama Pengguna</label>
+<input id="settings-name" placeholder="Masukkan nama Anda" type="text"/>
+</div>
+<div class="input-group">
+<label>Jabatan / Profesi</label>
+<input id="settings-role" placeholder="contoh: Calon Pranata Komputer" type="text"/>
+</div>
+<div style="display:flex;gap:12px;margin-top:20px">
+<button class="btn-modal primary" onclick="saveSettings()"><i class="fas fa-save" style="margin-right:6px"></i>Simpan</button>
+<button class="btn-modal secondary" onclick="clearAllData()"><i class="fas fa-trash" style="margin-right:6px"></i>Hapus Semua Data</button>
+</div>
+<p style="margin-top:16px;font-size:.78rem;color:var(--muted)">Data tersimpan secara lokal di browser Anda.</p>
+</div>
+</div>
+</div>
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profile-modal" onclick="closeModal(event)">
+<div class="modal">
+<h3><i class="fas fa-user-edit" style="color:var(--accent);margin-right:10px;"></i>Edit Profil</h3>
+<div class="input-group">
+<label>Nama Lengkap</label>
+<input id="modal-name" placeholder="Masukkan nama Anda" type="text"/>
+</div>
+<div class="modal-btns">
+<button class="btn-modal secondary" onclick="closeProfileModal()">Batal</button>
+<button class="btn-modal primary" onclick="saveProfile()">Simpan Profil</button>
+</div>
+</div>
+</div>
+<script>
+const sessions = [
+  { id:1, title:"Sesi 1 — Fondasi Komputer", desc:"Algoritma, Struktur Data, Jaringan, Basis Data, Sistem Operasi, Keamanan, Cloud & RPL.", icon:"fa-book", iconClass:"i1", emoji:"💻", href:"tkb-cpns-pranata-komputer.html", topics:8, total:30 },
+  { id:2, title:"Sesi 2 — Pengembangan & Regulasi", desc:"Pemrograman Web, Kriptografi, SPBE, NoSQL, Mobile, Jaringan Lanjut, dan Metodologi.", icon:"fa-code", iconClass:"i2", emoji:"⚙️", href:"tkb-cpns-pranata-komputer-2.html", topics:8, total:30 },
+  { id:3, title:"Sesi 3 — DevOps & Cloud Native", desc:"DevOps, Docker, Kubernetes, Microservices, Keamanan Aplikasi, IPv6 & Kebijakan TI.", icon:"fa-server", iconClass:"i3", emoji:"🚀", href:"tkb-cpns-pranata-komputer-3.html", topics:8, total:30 },
+  { id:4, title:"Sesi 4 — Materi Tingkat Lanjut", desc:"Arsitektur CPU, Sistem Bilangan, Konkuren, Data Warehouse, IoT, Automata & Regulasi.", icon:"fa-microchip", iconClass:"i4", emoji:"🧠", href:"tkb-cpns-pranata-komputer-4.html", topics:8, total:30 }
+];
+
+function getProfile() { return JSON.parse(localStorage.getItem('cpns-profile')||'{"name":"Pengguna","role":"Peserta CPNS"}'); }
+function setProfile(p) { localStorage.setItem('cpns-profile',JSON.stringify(p)); }
+function getScores() { return JSON.parse(localStorage.getItem('cpns-scores')||'{}'); }
+function initials(name) { return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'U'; }
+function goLogin() { window.location.href = 'login.html'; }
+
+function renderProfile() {
+  const p = getProfile();
+  document.getElementById('nav-username').textContent = p.name;
+  document.getElementById('hero-username').textContent = p.name;
+  document.getElementById('avatar-initials').textContent = initials(p.name);
+  document.getElementById('settings-name').value = p.name;
+  document.getElementById('settings-role').value = p.role||'Peserta CPNS';
+}
+
+function renderSessions() {
+  const scores = getScores();
+  const grid = document.getElementById('sessions-grid');
+  let doneCount=0, totalPct=0, totalCorrect=0, totalWrong=0, bestPct=0;
+
+  grid.innerHTML = sessions.map(s => {
+    const sc = scores['sesi-'+s.id];
+    const done = sc!=null;
+    if(done){ doneCount++; totalPct+=sc.pct; totalCorrect+=sc.correct; totalWrong+=sc.wrong; if(sc.pct>bestPct)bestPct=sc.pct; }
+    const pct = done?sc.pct:0;
+    const progressClass = pct>=80?'green':'';
+    const lastScoreHtml = done ? `
+      <div class="last-score-row">
+        <i class="fas fa-star"></i>
+        <span class="ls-label">Skor Terakhir</span>
+        <span class="ls-val">${sc.score} poin (${pct}%)</span>
+      </div>` : `
+      <div class="last-score-row" style="background:rgba(100,116,139,.06)">
+        <i class="fas fa-clock" style="color:var(--muted)"></i>
+        <span class="ls-label">Belum dikerjakan</span>
+        <span class="ls-val" style="color:var(--muted)">—</span>
+      </div>`;
+    return `
+    <div class="card">
+      <div class="status-badge ${done?'done':'todo'}"><i class="fas ${done?'fa-check-circle':'fa-circle'}"></i></div>
+      <div class="card-header">
+        <div class="card-icon ${s.iconClass}">${s.emoji}</div>
+        <div class="card-info"><h3>${s.title}</h3><p>${s.desc}</p></div>
+      </div>
+      <div class="card-body">
+        <div class="card-progress">
+          <div class="card-progress-header">
+            <span class="card-progress-label"><i class="fas fa-tasks" style="margin-right:4px"></i>Penyelesaian</span>
+            <span class="card-progress-pct">${pct}%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill ${progressClass}" style="width:${pct}%"></div></div>
+        </div>
+        ${lastScoreHtml}
+      </div>
+      <div class="card-footer">
+        <a class="btn-start" href="${s.href}">
+          <i class="fas ${done?'fa-redo':'fa-play'}"></i>
+          ${done?'Ulangi Sesi':'Mulai Sesi'}
+        </a>
+      </div>
+    </div>`;
+  }).join('');
+
+  const avgPct = doneCount>0 ? Math.round(totalPct/doneCount) : null;
+  const accuracy = (totalCorrect+totalWrong)>0 ? Math.round((totalCorrect/(totalCorrect+totalWrong))*100) : null;
+  const progress = Math.round((doneCount/sessions.length)*100);
+
+  document.getElementById('stat-done').textContent = doneCount;
+  document.getElementById('stat-avg').textContent = avgPct!=null ? avgPct+'%' : '—';
+  document.getElementById('ms-done').textContent = doneCount+'/4';
+  document.getElementById('ms-avg').textContent = avgPct!=null ? avgPct+'%' : '—';
+  document.getElementById('ms-progress').textContent = progress+'%';
+  document.getElementById('ms-best').textContent = doneCount>0 ? bestPct+'%' : '—';
+  document.getElementById('ms-wrong').textContent = doneCount>0 ? totalWrong : '—';
+  document.getElementById('ms-accuracy').textContent = accuracy!=null ? accuracy+'%' : '—';
+}
+
+function renderHistory() {
+  const scores = getScores();
+  const body = document.getElementById('history-body');
+  const summaryEl = document.getElementById('history-summary');
+  const entries = sessions.map(s => ({ session:s, sc:scores['sesi-'+s.id] })).filter(e=>e.sc);
+
+  if(entries.length===0) {
+    body.innerHTML = '<div class="empty-row"><i class="fas fa-inbox" style="font-size:1.5rem;opacity:.3;display:block;margin-bottom:8px"></i>Belum ada riwayat. Kerjakan sesi untuk melihat nilaimu!</div>';
+    summaryEl.style.display = 'none';
+    return;
+  }
+
+  // Summary stats
+  let totalCorrect=0, totalWrong=0, totalPct=0;
+  entries.forEach(e => { totalCorrect+=e.sc.correct; totalWrong+=e.sc.wrong; totalPct+=e.sc.pct; });
+  const avgPct = Math.round(totalPct/entries.length);
+  const accuracy = Math.round((totalCorrect/(totalCorrect+totalWrong))*100);
+
+  summaryEl.style.display = 'flex';
+  document.getElementById('sum-sessions').textContent = entries.length;
+  document.getElementById('sum-correct').textContent = totalCorrect;
+  document.getElementById('sum-wrong').textContent = totalWrong;
+  document.getElementById('sum-avg').textContent = avgPct+'%';
+  document.getElementById('sum-accuracy').textContent = accuracy+'%';
+
+  body.innerHTML = entries.map(({session,sc}) => {
+    const cls = sc.pct>=80?'high':sc.pct>=60?'mid':'low';
+    const date = sc.date ? new Date(sc.date).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+    const acc = Math.round((sc.correct/(sc.correct+sc.wrong))*100);
+    return `
+    <div class="history-row">
+      <span style="font-weight:600">${session.emoji} ${session.title}</span>
+      <span><span class="badge-score ${cls}"><i class="fas fa-trophy"></i> ${sc.pct}%</span></span>
+      <span><span class="correct-count">${sc.correct} ✓</span> &nbsp; <span class="wrong-count">${sc.wrong} ✗</span></span>
+      <span class="h-col-hide" style="font-weight:700;color:#8b5cf6">${acc}%</span>
+      <span class="h-col-hide" style="color:var(--muted);font-size:.78rem">${date}</span>
+    </div>`;
+  }).join('');
+}
+
+function showSection(name) {
+  ['home','history','settings'].forEach(s => {
+    document.getElementById('section-'+s).style.display = s===name?'block':'none';
+  });
+  document.querySelectorAll('.nav-link').forEach((l,i) => {
+    l.classList.toggle('active',['home','history','settings'][i]===name);
+  });
+  const labels={home:'',history:'Riwayat Nilai',settings:'Pengaturan'};
+  document.getElementById('bc-sep').style.display = name==='home'?'none':'';
+  document.getElementById('bc-current').textContent = labels[name]||'';
+  if(name==='history') renderHistory();
+}
+
+function toggleDark() {
+  document.body.classList.toggle('dark');
+  const d = document.body.classList.contains('dark');
+  document.getElementById('theme-icon').className = d?'fas fa-sun':'fas fa-moon';
+  localStorage.setItem('cpns-theme', d?'dark':'light');
+}
+
+function toggleDropdown() { document.getElementById('dropdown').classList.toggle('show'); }
+document.addEventListener('click', e => {
+  if(!document.getElementById('profile-chip').contains(e.target))
+    document.getElementById('dropdown').classList.remove('show');
+});
+function openProfileModal() {
+  document.getElementById('dropdown').classList.remove('show');
+  document.getElementById('modal-name').value = getProfile().name;
+  document.getElementById('profile-modal').classList.add('show');
+}
+function closeProfileModal() { document.getElementById('profile-modal').classList.remove('show'); }
+function closeModal(e) { if(e.target===document.getElementById('profile-modal')) closeProfileModal(); }
+function saveProfile() {
+  const name = document.getElementById('modal-name').value.trim()||'Pengguna';
+  const p=getProfile(); p.name=name; setProfile(p);
+  renderProfile(); renderSessions(); closeProfileModal();
+}
+function saveSettings() {
+  const name=document.getElementById('settings-name').value.trim()||'Pengguna';
+  const role=document.getElementById('settings-role').value.trim()||'Peserta CPNS';
+  setProfile({name,role}); renderProfile(); renderSessions();
+  alert('Pengaturan disimpan!');
+}
+function clearAllData() {
+  if(!confirm('Hapus semua data riwayat dan profil? Ini tidak bisa dibatalkan.')) return;
+  localStorage.removeItem('cpns-scores');
+  localStorage.removeItem('cpns-profile');
+  localStorage.removeItem('cpns-theme');
+  location.reload();
+}
+
+(function init() {
+  const theme = localStorage.getItem('cpns-theme');
+  if(theme==='dark'){ document.body.classList.add('dark'); document.getElementById('theme-icon').className='fas fa-sun'; }
+  renderProfile();
+  renderSessions();
+})();
+</script>
+</body>
+</html>
