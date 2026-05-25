@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login – TKB CPNS Pranata Komputer</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+
+<link href="login.css" rel="stylesheet"/></head>
+<body>
+<!-- LEFT PANEL -->
+<div class="left-panel">
+<div class="left-circle"></div>
+<div class="lp-brand">
+<div class="lp-brand-icon"><i class="fas fa-laptop-code"></i></div>
+<div class="lp-brand-text">
+<h1>TKB CPNS</h1>
+<p>Pranata Komputer</p>
+</div>
+</div>
+<h2 class="lp-title">Platform Latihan Soal<br/>CPNS Terbaik</h2>
+<p class="lp-subtitle">Persiapkan diri Anda menghadapi ujian CPNS Pranata Komputer dengan ribuan soal berkualitas tinggi dan pembahasan lengkap.</p>
+<div class="lp-features">
+<div class="lp-feat">
+<div class="lp-feat-icon"><i class="fas fa-brain"></i></div>
+<div class="lp-feat-text">
+<h4>120 Soal Berkualitas</h4>
+<p>4 sesi latihan dengan materi lengkap</p>
+</div>
+</div>
+<div class="lp-feat">
+<div class="lp-feat-icon"><i class="fas fa-lightbulb"></i></div>
+<div class="lp-feat-text">
+<h4>Pembahasan Mendalam</h4>
+<p>Setiap soal dilengkapi penjelasan detail</p>
+</div>
+</div>
+<div class="lp-feat">
+<div class="lp-feat-icon"><i class="fas fa-chart-line"></i></div>
+<div class="lp-feat-text">
+<h4>Pantau Progres Belajar</h4>
+<p>Riwayat nilai dan statistik lengkap</p>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+<button class="theme-btn-login" onclick="toggleDark()" title="Ganti tema">
+<i class="fas fa-moon" id="theme-icon"></i>
+</button>
+<div class="login-header">
+<div class="greet">Selamat Datang <span>Kembali</span> 👋</div>
+<p class="sub">Masuk untuk melanjutkan latihan soal</p>
+</div>
+<div class="login-form">
+<div class="error-msg" id="error-msg">
+<i class="fas fa-exclamation-circle"></i>
+<span id="error-text">Email atau kata sandi salah.</span>
+</div>
+<div class="form-group">
+<label>Email</label>
+<div class="input-wrap">
+<i class="fas fa-envelope input-icon"></i>
+<input autocomplete="email" id="input-email" placeholder="nama@email.com" type="email"/>
+</div>
+</div>
+<div class="form-group">
+<label>Kata Sandi</label>
+<div class="input-wrap">
+<i class="fas fa-lock input-icon"></i>
+<input autocomplete="current-password" id="input-pass" placeholder="Masukkan kata sandi" type="password"/>
+<i class="fas fa-eye input-toggle" id="pass-toggle" onclick="togglePass()"></i>
+</div>
+</div>
+<div class="remember-row">
+<label class="checkbox-wrap">
+<input id="remember-me" type="checkbox"/>
+<div class="custom-check"></div>
+<span class="checkbox-label">Ingat saya</span>
+</label>
+<a class="forgot-link" onclick="forgotPassword()">Lupa Password?</a>
+</div>
+<button class="btn-login" onclick="doLogin()">
+<i class="fas fa-sign-in-alt"></i>
+      Masuk ke Dashboard
+    </button>
+<div class="divider">
+<div class="div-line"></div>
+<span class="div-text">atau masuk dengan</span>
+<div class="div-line"></div>
+</div>
+<div class="social-btns">
+<button class="btn-social" onclick="loginGoogle()">
+<img alt="Google" onerror="this.style.display='none';this.parentNode.insertAdjacentHTML('afterbegin','&lt;i class=\'fab fa-google\' style=\'color:#ea4335\'&gt;&lt;/i&gt;')" src="https://www.google.com/favicon.ico"/>
+        Google
+      </button>
+<button class="btn-social" onclick="loginBelajar()">
+<div class="icon-belajar">B</div>
+        Akun Belajar.id
+      </button>
+</div>
+<div class="register-row">
+      Belum punya akun? <a onclick="doRegister()">Daftar Sekarang</a>
+</div>
+</div>
+</div>
+<script>
+// ===== THEME =====
+function toggleDark() {
+  document.body.classList.toggle('dark');
+  const d = document.body.classList.contains('dark');
+  document.getElementById('theme-icon').className = d ? 'fas fa-sun' : 'fas fa-moon';
+  localStorage.setItem('cpns-theme', d ? 'dark' : 'light');
+}
+(function () {
+  if (localStorage.getItem('cpns-theme') === 'dark') {
+    document.body.classList.add('dark');
+    document.getElementById('theme-icon').className = 'fas fa-sun';
+  }
+  // Pre-fill if remembered
+  const saved = localStorage.getItem('cpns-remember');
+  if (saved) {
+    try {
+      const d = JSON.parse(saved);
+      document.getElementById('input-email').value = d.email || '';
+      document.getElementById('remember-me').checked = true;
+    } catch (e) {}
+  }
+})();
+
+// ===== PASS TOGGLE =====
+function togglePass() {
+  const inp = document.getElementById('input-pass');
+  const icon = document.getElementById('pass-toggle');
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    icon.className = 'fas fa-eye-slash input-toggle';
+  } else {
+    inp.type = 'password';
+    icon.className = 'fas fa-eye input-toggle';
+  }
+}
+
+// ===== LOGIN =====
+function showError(msg) {
+  document.getElementById('error-text').textContent = msg;
+  document.getElementById('error-msg').classList.add('show');
+}
+function hideError() { document.getElementById('error-msg').classList.remove('show'); }
+
+function doLogin() {
+  hideError();
+  const email = document.getElementById('input-email').value.trim();
+  const pass = document.getElementById('input-pass').value;
+  const remember = document.getElementById('remember-me').checked;
+
+  if (!email) { showError('Masukkan alamat email Anda.'); return; }
+  if (!email.includes('@')) { showError('Format email tidak valid.'); return; }
+  if (!pass) { showError('Masukkan kata sandi Anda.'); return; }
+
+  // Save profile from email
+  const name = email.split('@')[0].replace(/[^a-zA-Z0-9 ]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  const existing = JSON.parse(localStorage.getItem('cpns-profile') || '{}');
+  if (!existing.name || existing.name === 'Pengguna') {
+    localStorage.setItem('cpns-profile', JSON.stringify({ name, role: 'Peserta CPNS' }));
+  }
+
+  if (remember) {
+    localStorage.setItem('cpns-remember', JSON.stringify({ email }));
+  } else {
+    localStorage.removeItem('cpns-remember');
+  }
+
+  localStorage.setItem('cpns-logged', '1');
+
+  // Animate then redirect
+  document.querySelector('.btn-login').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat...';
+  setTimeout(() => { window.location.href = 'index.html'; }, 800);
+}
+
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+function forgotPassword() {
+  alert('Fitur reset password akan segera hadir.\n\nUntuk saat ini, Anda bisa langsung masuk dengan email apa pun.');
+}
+
+function loginGoogle() {
+  document.querySelector('.btn-social').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menghubungkan...';
+  setTimeout(() => {
+    const name = 'Pengguna Google';
+    localStorage.setItem('cpns-profile', JSON.stringify({ name, role: 'Peserta CPNS' }));
+    localStorage.setItem('cpns-logged', '1');
+    window.location.href = 'index.html';
+  }, 1000);
+}
+
+function loginBelajar() {
+  setTimeout(() => {
+    const name = 'Pengguna Belajar.id';
+    localStorage.setItem('cpns-profile', JSON.stringify({ name, role: 'Peserta CPNS' }));
+    localStorage.setItem('cpns-logged', '1');
+    window.location.href = 'index.html';
+  }, 800);
+}
+
+function doRegister() {
+  alert('Fitur pendaftaran akan segera hadir!\n\nUntuk saat ini, Anda bisa langsung login dengan email apa pun.');
+}
+</script>
+</body>
+</html>

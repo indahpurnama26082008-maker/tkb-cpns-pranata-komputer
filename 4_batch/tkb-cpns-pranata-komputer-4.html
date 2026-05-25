@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TKB CPNS – Pranata Komputer Sesi 4 — Materi Tingkat Ahli</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+
+<link href="tkb-cpns-pranata-komputer-4.css" rel="stylesheet"/></head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+<a class="nav-back" href="index.html">
+<i class="fas fa-arrow-left"></i> Dashboard
+  </a>
+<div class="nav-title-area">
+<div class="nav-title">🧠 Sesi 4 — Materi Tingkat Ahli</div>
+<div class="nav-subtitle">30 Soal · Arsitektur CPU, Konkuren, Data Warehouse, IoT &amp; Automata</div>
+</div>
+<div class="nav-right">
+<div class="timer-box"><i class="fas fa-clock"></i><span id="timer">30:00</span></div>
+<button class="theme-btn" id="theme-btn" onclick="toggleDark()" title="Ganti tema">
+<i class="fas fa-moon" id="theme-icon"></i>
+</button>
+<div class="profile-mini" id="profile-mini" title="Profil">U</div>
+</div>
+</nav>
+<!-- BREADCRUMB -->
+<div class="breadcrumb-bar">
+<i class="fas fa-home" style="font-size:.8rem"></i>
+<a class="bc-link" href="index.html">Dashboard</a>
+<span style="opacity:.4">›</span>
+<span style="color:var(--text);font-weight:600">Sesi 4 — Materi Tingkat Ahli</span>
+</div>
+<div class="wrapper">
+<!-- INTRO -->
+<div id="intro">
+<div class="intro-card">
+<div class="intro-icon-wrap" style="background:linear-gradient(135deg,#10b981,#6ee7b7)">🧠</div>
+<div class="intro-title">Sesi 4 — Materi Tingkat Ahli</div>
+<p class="intro-desc">Paket soal keempat dirancang untuk Pranata Komputer Tingkat Ahli: arsitektur CPU, konversi bilangan, race condition &amp; deadlock, ETL &amp; data warehouse, model SDLC, protokol IoT (I2C/SPI), teori automata, dan regulasi terbaru.</p>
+<div class="intro-meta">
+<div class="meta-pill"><i class="fas fa-question-circle"></i> 30 Soal</div>
+<div class="meta-pill"><i class="fas fa-tags"></i> 8 Topik</div>
+<div class="meta-pill"><i class="fas fa-star"></i> Skor Maks: 150</div>
+</div>
+<div class="topics-wrap">
+<span class="topic-tag">🖥️ Arsitektur Komputer</span><span class="topic-tag">🔢 Sistem Bilangan</span><span class="topic-tag">⚡ Pemrograman Konkuren</span><span class="topic-tag">📊 Data Warehouse &amp; ETL</span><span class="topic-tag">📋 SDLC &amp; Manajemen Proyek</span><span class="topic-tag">🔌 Embedded &amp; IoT</span><span class="topic-tag">🤖 Automata &amp; Kompilasi</span><span class="topic-tag">📜 Regulasi TI Terbaru</span>
+</div>
+<button class="btn-start-quiz" onclick="startQuiz()">
+<i class="fas fa-play" style="margin-right:8px"></i>Mulai Ujian
+      </button>
+</div>
+</div>
+<!-- QUIZ -->
+<div id="quiz" style="display:none">
+<div class="stats-bar">
+<div class="stat"><div class="stat-val" id="s-cur">1</div><div class="stat-lbl">Soal ke</div></div>
+<div class="stat"><div class="stat-val g" id="s-ok">0</div><div class="stat-lbl">Benar</div></div>
+<div class="stat"><div class="stat-val r" id="s-no">0</div><div class="stat-lbl">Salah</div></div>
+<div class="stat"><div class="stat-val m" id="s-rem">30</div><div class="stat-lbl">Sisa</div></div>
+</div>
+<div class="prog-wrap"><div class="prog-bar" id="prog" style="width:0%"></div></div>
+<div class="session-label" id="sess-label"></div>
+<div id="qarea"></div>
+<div class="actions">
+<button class="btn btn-secondary" id="btn-exp" onclick="toggleExp()" style="display:none">
+<i class="fas fa-lightbulb" style="margin-right:6px"></i>Pembahasan
+      </button>
+<button class="btn btn-secondary" id="btn-stop" onclick="stopSession()">
+<i class="fas fa-stop-circle" style="margin-right:6px"></i>Berhenti
+      </button>
+<button class="btn btn-primary" disabled="" id="btn-nx" onclick="nextQ()">
+        Berikutnya <i class="fas fa-arrow-right" style="margin-left:6px"></i>
+</button>
+</div>
+</div>
+<!-- RESULT -->
+<div class="result-screen" id="result">
+<div class="result-top">
+<div class="score-circle" id="score-circle">
+<div class="score-val" id="score-pct">0%</div>
+</div>
+<div class="result-title" id="result-title">Hasil Ujian</div>
+<div class="result-sub" id="result-sub"></div>
+<div class="result-stats">
+<div class="rstat"><div class="rstat-val" id="r-ok" style="color:var(--correct)">0</div><div class="rstat-lbl">Benar</div></div>
+<div class="rstat"><div class="rstat-val" id="r-no" style="color:var(--wrong)">0</div><div class="rstat-lbl">Salah</div></div>
+<div class="rstat"><div class="rstat-val" id="r-sc" style="color:var(--accent)">0</div><div class="rstat-lbl">Skor</div></div>
+<div class="rstat"><div class="rstat-val" id="r-ans" style="color:var(--primary)">0/0</div><div class="rstat-lbl">Terjawab</div></div>
+</div>
+<div class="result-btns">
+<button class="btn btn-secondary" onclick="restart()">
+<i class="fas fa-redo" style="margin-right:6px"></i>Ulangi
+        </button>
+<button class="btn btn-primary" onclick="document.getElementById('rev').scrollIntoView({behavior:'smooth'})">
+<i class="fas fa-list-check" style="margin-right:6px"></i>Review Jawaban
+        </button>
+<a class="btn btn-secondary" href="index.html">
+<i class="fas fa-home" style="margin-right:6px"></i>Dashboard
+        </a>
+</div>
+</div>
+<div class="review-section" id="rev">
+<div class="review-head"><i class="fas fa-clipboard-list" style="margin-right:6px"></i>Rangkuman Jawaban</div>
+<div id="revlist"></div>
+</div>
+</div>
+</div>
+<script>
+// ===== QUESTIONS =====
+const Q=[
+  {
+    cat:"Arsitektur Komputer",
+    q:"Komponen utama CPU yang berfungsi mengambil instruksi dari memori, mendekode, dan mengeksekusinya secara berurutan disebut...",
+    o:["ALU (Arithmetic Logic Unit)","Control Unit","Register","Cache Memory"],
+    a:1,
+    e:"<strong>Control Unit (CU)</strong> adalah otak CPU yang mengoordinasikan seluruh operasi komputer: mengambil instruksi dari memori (fetch), mendekode instruksi, lalu mengarahkan komponen lain untuk mengeksekusinya. <em>ALU</em> melakukan operasi aritmatika dan logika; <em>Register</em> adalah penyimpanan sementara paling cepat di CPU; <em>Cache</em> adalah memori sangat cepat antara CPU dan RAM untuk mempercepat akses data yang sering digunakan."
+  },
+  {
+    cat:"Sistem Bilangan",
+    q:"Hasil konversi bilangan heksadesimal <code>2F</code> ke bilangan desimal adalah...",
+    o:["37","45","47","55"],
+    a:2,
+    e:"<strong>Konversi Heksadesimal ke Desimal:</strong> 2F₁₆ = (2 × 16¹) + (F × 16⁰) = (2 × 16) + (15 × 1) = 32 + 15 = <strong>47</strong>. Ingat: dalam heksadesimal, A=10, B=11, C=12, D=13, E=14, F=15. Heksadesimal (basis 16) sering digunakan dalam pemrograman untuk merepresentasikan warna (HTML: #FF5733), alamat memori, dan nilai biner yang panjang."
+  },
+  {
+    cat:"Pemrograman Konkuren",
+    q:"Kondisi yang terjadi ketika dua atau lebih thread mengakses data bersama secara bersamaan dan setidaknya satu melakukan operasi tulis, sehingga hasil akhir bergantung pada urutan eksekusi, disebut...",
+    o:["Deadlock","Race Condition","Starvation","Livelock"],
+    a:1,
+    e:"<strong>Race Condition</strong> terjadi ketika perilaku program bergantung pada urutan/waktu eksekusi thread yang tidak dapat diprediksi. Contoh: dua thread sama-sama membaca nilai counter (=5), keduanya menambah 1, keduanya menulis kembali — hasilnya 6 bukan 7. Solusi: <em>Mutex/Lock</em>, <em>Semaphore</em>, <em>Atomic Operations</em>. Berbeda dengan Deadlock (saling menunggu resource) dan Starvation (thread tidak pernah mendapat giliran)."
+  },
+  {
+    cat:"Data Warehouse & ETL",
+    q:"Proses dalam data warehouse yang mengambil data dari berbagai sumber, membersihkan/mengubah format, lalu memuatnya ke target storage disebut...",
+    o:["OLAP","Data Mining","ETL (Extract, Transform, Load)","MapReduce"],
+    a:2,
+    e:"<strong>ETL (Extract, Transform, Load)</strong> adalah proses tiga tahap dalam integrasi data: <em>Extract</em> = mengambil data dari berbagai sumber (database, API, file); <em>Transform</em> = membersihkan, memvalidasi, mengkonversi format, dan mengagregasi data; <em>Load</em> = memasukkan data ke data warehouse atau data mart. Tools populer: Apache NiFi, Talend, Informatica, dbt. Variasi modern: ELT (load dulu, transform belakangan)."
+  },
+  {
+    cat:"SDLC & Manajemen Proyek",
+    q:"Model SDLC yang membagi pengembangan menjadi fase-fase berurutan (Requirement → Design → Implementation → Testing → Deployment) dan setiap fase harus selesai sebelum fase berikutnya dimulai disebut...",
+    o:["Agile Model","Spiral Model","Waterfall Model","RAD (Rapid Application Development)"],
+    a:2,
+    e:"<strong>Waterfall Model</strong> adalah model SDLC sekuensial linier di mana setiap fase harus selesai sepenuhnya sebelum fase berikutnya dimulai, mirip air terjun. Keunggulan: terstruktur, dokumentasi lengkap, cocok untuk proyek dengan requirement yang jelas dan stabil. Kelemahan: tidak fleksibel untuk perubahan requirement, feedback pengguna baru diperoleh di akhir. Kontras dengan Agile yang iteratif dan inkremental."
+  },
+  {
+    cat:"Sistem Embedded & IoT",
+    q:"Protokol komunikasi serial yang umum digunakan pada perangkat IoT dan sensor dengan dua jalur sinyal (SDA dan SCL) untuk komunikasi antar IC dalam jarak dekat disebut...",
+    o:["UART","SPI","I2C","CAN Bus"],
+    a:2,
+    e:"<strong>I2C (Inter-Integrated Circuit)</strong> adalah protokol komunikasi serial sinkron yang menggunakan dua jalur: <em>SDA</em> (Serial Data) dan <em>SCL</em> (Serial Clock). Mendukung multi-master dan multi-slave dalam satu bus, dengan pengalamatan 7-bit (128 device). Kecepatan: 100kbps (Standard), 400kbps (Fast), 3.4Mbps (High Speed). Umum digunakan untuk sensor suhu, accelerometer, EEPROM. <em>SPI</em> lebih cepat tapi butuh lebih banyak pin."
+  },
+  {
+    cat:"Automata & Kompilasi",
+    q:"Fase pertama dalam proses kompilasi yang memecah kode sumber menjadi unit-unit token (identifier, keyword, operator, literal) disebut...",
+    o:["Parsing","Semantic Analysis","Lexical Analysis (Lexer/Scanner)","Code Generation"],
+    a:2,
+    e:"<strong>Lexical Analysis (Scanning)</strong> adalah fase pertama kompilasi yang membaca karakter input satu per satu dan mengelompokkannya menjadi <em>token</em> (unit bermakna terkecil). Contoh: <code>int x = 5 + y;</code> → token: [int, x, =, 5, +, y, ;]. Tahap kompilasi berikutnya: Parsing (analisis sintaks → parse tree) → Semantic Analysis → Intermediate Code Generation → Optimization → Code Generation."
+  },
+  {
+    cat:"Regulasi TI Terbaru",
+    q:"Kebijakan pemerintah Indonesia yang mewajibkan penggunaan produk dalam negeri (PDN) untuk pengadaan barang/jasa TI di instansi pemerintah, dengan mengutamakan tingkat kandungan dalam negeri (TKDN), didasarkan pada...",
+    o:["Perpres No. 16 Tahun 2018","Inpres No. 2 Tahun 2022","UU No. 27 Tahun 2022","PP No. 82 Tahun 2012"],
+    a:1,
+    e:"<strong>Inpres No. 2 Tahun 2022</strong> tentang Percepatan Peningkatan Penggunaan Produk Dalam Negeri (PDN) dan Produk Usaha Mikro, Usaha Kecil, dan Koperasi mewajibkan seluruh K/L/D mengutamakan produk TI dalam negeri yang memiliki TKDN ≥ 25%. Kebijakan ini bertujuan mendorong industri teknologi lokal dan mengurangi ketergantungan pada produk impor dalam pengadaan pemerintah."
+  },
+  {
+    cat:"Arsitektur Komputer",
+    q:"Prinsip desain arsitektur komputer yang menyatakan bahwa instruksi harus memiliki format seragam, sederhana, dan dapat dieksekusi dalam satu siklus clock disebut...",
+    o:["CISC (Complex Instruction Set Computing)","RISC (Reduced Instruction Set Computing)","VLIW (Very Long Instruction Word)","SIMD"],
+    a:1,
+    e:"<strong>RISC (Reduced Instruction Set Computing)</strong> menggunakan set instruksi yang kecil, sederhana, dan seragam — setiap instruksi umumnya dieksekusi dalam satu siklus clock, menyederhanakan pipeline. Contoh: ARM (digunakan iPhone, Android), RISC-V, MIPS. Berbeda dengan <em>CISC</em> (x86, AMD64) yang memiliki instruksi kompleks dan bervariasi. Chip mobile modern hampir seluruhnya berbasis RISC karena efisiensi energinya."
+  },
+  {
+    cat:"Sistem Bilangan",
+    q:"Dalam sistem bilangan biner, operasi XOR antara <code>1010</code> dan <code>1100</code> menghasilkan...",
+    o:["1110","0110","1000","0100"],
+    a:1,
+    e:"<strong>Operasi XOR (Exclusive OR)</strong>: output 1 jika input berbeda, output 0 jika input sama. Bit per bit: 1 XOR 1=0, 0 XOR 1=1, 1 XOR 0=1, 0 XOR 0=0. Jadi 1010 XOR 1100 = <strong>0110</strong>. XOR banyak digunakan dalam kriptografi (stream cipher), deteksi error (parity bit), dan algoritma swap tanpa variabel temporary: <code>a = a XOR b; b = a XOR b; a = a XOR b</code>."
+  },
+  {
+    cat:"Data Warehouse & ETL",
+    q:"Skema basis data dalam data warehouse yang terdiri dari satu tabel fakta besar di tengah yang dikelilingi tabel-tabel dimensi disebut...",
+    o:["Snowflake Schema","Star Schema","Galaxy Schema","Third Normal Form"],
+    a:1,
+    e:"<strong>Star Schema</strong> adalah desain data warehouse yang paling umum: satu <em>fact table</em> (berisi metrik/angka seperti penjualan) di pusat, dikelilingi <em>dimension tables</em> (berisi konteks seperti waktu, produk, pelanggan, lokasi). Query cepat karena minimal JOIN. <em>Snowflake Schema</em> adalah normalisasi Star Schema — dimension table dipecah lagi. <em>Star</em> lebih umum digunakan karena performa query yang lebih baik."
+  },
+  {
+    cat:"Pemrograman Konkuren",
+    q:"Mekanisme sinkronisasi yang memungkinkan hanya satu thread mengakses critical section pada satu waktu, menggunakan operasi lock() dan unlock() disebut...",
+    o:["Semaphore","Mutex (Mutual Exclusion)","Monitor","Spinlock"],
+    a:1,
+    e:"<strong>Mutex (Mutual Exclusion Lock)</strong> adalah mekanisme sinkronisasi yang memastikan hanya satu thread yang dapat berada di dalam critical section pada satu waktu. Thread yang ingin masuk harus memanggil <code>lock()</code>; setelah selesai memanggil <code>unlock()</code>. Berbeda dengan <em>Semaphore</em> yang bisa mengizinkan N thread secara bersamaan (counting semaphore). Mutex bersifat ownership — hanya thread yang mengunci yang bisa membukanya."
+  },
+  {
+    cat:"SDLC & Manajemen Proyek",
+    q:"Dalam manajemen proyek PMBOK, dokumen yang mendefinisikan ruang lingkup, jadwal, biaya, kualitas, dan sumber daya proyek secara resmi disebut...",
+    o:["Project Charter","Project Management Plan","Work Breakdown Structure (WBS)","Risk Register"],
+    a:1,
+    e:"<strong>Project Management Plan</strong> adalah dokumen komprehensif yang mengintegrasikan semua rencana manajemen proyek (scope, schedule, cost, quality, resource, communication, risk, procurement, stakeholder). Berbeda dengan <em>Project Charter</em> yang lebih singkat dan berfungsi sebagai otorisasi proyek. <em>WBS</em> adalah dekomposisi hierarchis ruang lingkup; <em>Risk Register</em> mendokumentasikan risiko yang teridentifikasi."
+  },
+  {
+    cat:"Sistem Embedded & IoT",
+    q:"Sistem operasi real-time (RTOS) yang paling umum digunakan pada microcontroller seperti Arduino dan STM32 untuk mengelola task dan sumber daya secara deterministik adalah...",
+    o:["Linux","Windows IoT","FreeRTOS","Android Things"],
+    a:2,
+    e:"<strong>FreeRTOS</strong> adalah RTOS open-source yang paling populer untuk microcontroller dengan resource terbatas (RAM kecil, CPU sederhana). Menyediakan: task scheduling (preemptive/cooperative), semaphore, mutex, queue, timer. Bersifat deterministik — task dengan prioritas tertinggi selalu mendapat CPU tepat waktu. Digunakan pada ESP32, STM32, ARM Cortex-M. Amazon mengembangkan AWS FreeRTOS untuk integrasi cloud IoT."
+  },
+  {
+    cat:"Arsitektur Komputer",
+    q:"Teknik dalam pipelining CPU untuk menangani kondisi di mana instruksi berikutnya bergantung pada hasil instruksi yang sedang dieksekusi (data hazard) disebut...",
+    o:["Branch Prediction","Out-of-Order Execution","Data Forwarding (Bypassing)","Speculative Execution"],
+    a:2,
+    e:"<strong>Data Forwarding (Bypassing)</strong> adalah teknik untuk mengatasi data hazard dalam pipeline dengan langsung meneruskan hasil komputasi dari output satu tahap pipeline ke input tahap berikutnya, tanpa menunggu hasil ditulis ke register terlebih dahulu. Ini mengurangi pipeline stall (bubble). Teknik lain: <em>Branch Prediction</em> untuk control hazard; <em>Out-of-Order Execution</em> untuk mengeksekusi instruksi yang tidak bergantung secara paralel."
+  },
+  {
+    cat:"Automata & Kompilasi",
+    q:"Jenis automata yang dapat berada dalam beberapa state secara bersamaan atau bertransisi ke state berikutnya tanpa membaca input (epsilon transition) disebut...",
+    o:["Deterministic Finite Automaton (DFA)","Non-deterministic Finite Automaton (NFA)","Pushdown Automaton","Turing Machine"],
+    a:1,
+    e:"<strong>NFA (Non-deterministic Finite Automaton)</strong> dapat berada di beberapa state sekaligus dan memiliki transisi epsilon (ε) — berpindah state tanpa membaca input. Meski terlihat lebih powerful, NFA dan DFA memiliki kekuatan ekspresif yang sama (setiap NFA bisa dikonversi ke DFA ekuivalen melalui subset construction). NFA lebih mudah dibuat secara manual, DFA lebih efisien untuk implementasi. Keduanya mengenali bahasa reguler."
+  },
+  {
+    cat:"Regulasi TI Terbaru",
+    q:"Dalam arsitektur SPBE nasional, layanan TIK (Teknologi Informasi dan Komunikasi) yang digunakan bersama oleh seluruh instansi pemerintah dan disediakan oleh Kominfo disebut...",
+    o:["Aplikasi Khusus","Infrastruktur SPBE Nasional","Layanan Berbagi Pakai","Platform Digital Government"],
+    a:2,
+    e:"<strong>Layanan Berbagi Pakai (Shared Services)</strong> dalam arsitektur SPBE adalah layanan TIK yang disediakan secara terpusat oleh Kominfo dan dapat digunakan bersama oleh seluruh instansi pemerintah untuk efisiensi. Contoh: Government Cloud (GovCloud) PDNS, jaringan IPVPN, portal layanan publik, sistem keamanan siber. Pendekatan ini menghindari duplikasi pembangunan infrastruktur TI di setiap K/L/D."
+  },
+  {
+    cat:"Data Warehouse & ETL",
+    q:"Teknik analitik yang menampilkan data dalam bentuk kubus multidimensi sehingga pengguna dapat melakukan analisis dari berbagai sudut pandang (slice, dice, drill-down) disebut...",
+    o:["OLTP (Online Transaction Processing)","OLAP (Online Analytical Processing)","Data Mining","Stream Processing"],
+    a:1,
+    e:"<strong>OLAP (Online Analytical Processing)</strong> memungkinkan analisis data multidimensi secara interaktif untuk business intelligence. Operasi kunci: <em>Slice</em> (filter satu dimensi), <em>Dice</em> (filter beberapa dimensi), <em>Drill-down</em> (detail lebih dalam), <em>Roll-up</em> (agregasi), <em>Pivot</em> (rotasi sudut pandang). Berbeda dengan <em>OLTP</em> yang dioptimalkan untuk transaksi harian (INSERT/UPDATE/DELETE yang cepat). OLAP menggunakan Star/Snowflake Schema."
+  },
+  {
+    cat:"SDLC & Manajemen Proyek",
+    q:"Teknik estimasi biaya dan jadwal proyek yang menggunakan tiga titik perkiraan (optimistic, most likely, pessimistic) untuk menghitung estimasi yang lebih akurat disebut...",
+    o:["Function Point Analysis","COCOMO","PERT (Program Evaluation and Review Technique)","Analogous Estimating"],
+    a:2,
+    e:"<strong>PERT</strong> menggunakan rumus: Estimasi = (O + 4M + P) / 6, di mana O=Optimistic, M=Most Likely, P=Pessimistic. Dengan standar deviasi = (P - O) / 6. Teknik ini lebih akurat dari estimasi tunggal karena memperhitungkan ketidakpastian. Banyak digunakan untuk proyek TI yang kompleks. <em>COCOMO</em> berbasis ukuran kode (LOC); <em>Function Point</em> berbasis fungsionalitas; <em>Analogous</em> berdasarkan proyek serupa."
+  },
+  {
+    cat:"Pemrograman Konkuren",
+    q:"Model konkurensi di mana unit komputasi berkomunikasi dengan mengirim dan menerima pesan (bukan shared memory), diimplementasikan dalam bahasa seperti Erlang dan Go, disebut...",
+    o:["Thread-based Concurrency","Actor Model / CSP (Communicating Sequential Processes)","Coroutine","Fork-Join Model"],
+    a:1,
+    e:"<strong>Actor Model / CSP</strong> adalah model konkurensi di mana proses independen berkomunikasi melalui <em>message passing</em> bukan memori bersama — menghilangkan race condition secara desain. <em>Actor Model</em> (Erlang, Akka): setiap actor memiliki mailbox; <em>CSP</em> (Go: goroutine + channel): proses berkomunikasi via channel tersinkronisasi. Filosofi Go: 'Do not communicate by sharing memory; share memory by communicating.'"
+  },
+  {
+    cat:"Sistem Bilangan",
+    q:"Representasi bilangan negatif dalam sistem biner yang paling umum digunakan pada komputer modern karena menyederhanakan operasi aritmatika adalah...",
+    o:["Sign-Magnitude","One's Complement","Two's Complement","Excess-N (Biased)"],
+    a:2,
+    e:"<strong>Two's Complement</strong> adalah representasi paling umum untuk bilangan bulat bertanda pada komputer modern. Cara mendapatkan komplemen dua: inversi semua bit (one's complement) lalu tambahkan 1. Keunggulan: hanya satu representasi untuk 0, operasi penjumlahan dan pengurangan menggunakan sirkuit yang sama. Contoh: -5 dalam 8-bit two's complement = 11111011. Semua CPU modern (x86, ARM) menggunakan representasi ini."
+  },
+  {
+    cat:"Arsitektur Komputer",
+    q:"Jenis memori komputer yang bersifat non-volatile, dapat dibaca berkali-kali namun proses penulisannya memerlukan proses penghapusan khusus (erase) terlebih dahulu, dan umum digunakan pada SSD serta USB flash drive disebut...",
+    o:["SRAM","DRAM","Flash Memory (NAND)","ROM"],
+    a:2,
+    e:"<strong>Flash Memory (NAND)</strong> adalah memori non-volatile yang menyimpan data dalam sel transistor floating-gate. Karakteristik: data tetap ada tanpa daya (non-volatile), kecepatan baca tinggi, penulisan memerlukan erase blok dulu. Digunakan pada SSD, USB flash drive, kartu SD, eMMC. Jenis sel: SLC (1 bit/sel, tercepat), MLC (2 bit), TLC (3 bit), QLC (4 bit, paling murah tapi paling lambat dan pendek usianya)."
+  },
+  {
+    cat:"Automata & Kompilasi",
+    q:"Jenis tata bahasa dalam hierarki Chomsky yang digunakan untuk mendefinisikan sintaks bahasa pemrograman dan dapat dikenali oleh Pushdown Automaton adalah...",
+    o:["Tata Bahasa Regular (Tipe 3)","Tata Bahasa Bebas Konteks / Context-Free Grammar (Tipe 2)","Tata Bahasa Sensitif Konteks (Tipe 1)","Tata Bahasa Tak Terbatas (Tipe 0)"],
+    a:1,
+    e:"<strong>Context-Free Grammar (CFG) / Tipe 2</strong> dalam hierarki Chomsky adalah tata bahasa yang aturan produksinya berbentuk A → α (sisi kiri hanya satu non-terminal). Digunakan untuk mendefinisikan sintaks bahasa pemrograman dan dikenali oleh Pushdown Automaton. Parsing CFG dilakukan dengan algoritma seperti LL(k), LR(k), CYK. Hierarki Chomsky: Tipe 3 (Regular) ⊂ Tipe 2 (CFG) ⊂ Tipe 1 (Context-Sensitive) ⊂ Tipe 0 (Recursively Enumerable)."
+  },
+  {
+    cat:"Regulasi TI Terbaru",
+    q:"Indeks yang digunakan untuk mengukur tingkat kematangan implementasi SPBE pada instansi pemerintah di Indonesia, dengan penilaian dari skala 1 hingga 5, disebut...",
+    o:["Indeks Reformasi Birokrasi","Indeks SPBE","e-Government Development Index (EGDI)","Digital Maturity Index"],
+    a:1,
+    e:"<strong>Indeks SPBE</strong> adalah instrumen evaluasi pemerintah yang mengukur tingkat kematangan penerapan SPBE pada instansi pemerintah, dengan skala 1 (Rintisan) hingga 5 (Optimum). Evaluasi dilakukan oleh KemenPAN-RB berkoordinasi dengan Kominfo dan BRIN. Tiga domain penilaian: Tata Kelola SPBE, Layanan SPBE, dan Teknologi SPBE. Hasil indeks dipublikasikan setiap tahun dan digunakan sebagai dasar reward/incentive bagi instansi berprestasi."
+  },
+  {
+    cat:"Data Warehouse & ETL",
+    q:"Platform komputasi terdistribusi open-source yang memproses data besar (Big Data) menggunakan paradigma MapReduce di atas cluster commodity hardware disebut...",
+    o:["Apache Spark","Apache Hadoop","Apache Flink","Apache Storm"],
+    a:1,
+    e:"<strong>Apache Hadoop</strong> adalah framework open-source untuk pemrosesan dan penyimpanan data besar secara terdistribusi. Komponen utama: <em>HDFS</em> (Hadoop Distributed File System) untuk penyimpanan terdistribusi; <em>MapReduce</em> untuk pemrosesan paralel (Map: transformasi, Reduce: agregasi); <em>YARN</em> untuk manajemen resource. <em>Apache Spark</em> lebih modern dan cepat (in-memory processing) tapi sering berjalan di atas Hadoop."
+  },
+  {
+    cat:"SDLC & Manajemen Proyek",
+    q:"Dalam framework Agile Scrum, artefak yang berisi daftar terurut semua fitur, perbaikan, dan perubahan yang perlu dilakukan pada produk, dikelola oleh Product Owner, disebut...",
+    o:["Sprint Backlog","Product Backlog","Increment","Definition of Done"],
+    a:1,
+    e:"<strong>Product Backlog</strong> adalah daftar dinamis dan terurut dari semua yang diperlukan dalam produk — dikelola dan diprioritaskan oleh <em>Product Owner</em>. Item di puncak backlog lebih detail dan siap untuk dikerjakan (ready). Berbeda dengan <em>Sprint Backlog</em> yang merupakan subset product backlog yang dipilih untuk dikerjakan dalam satu sprint. <em>Increment</em> adalah hasil kerja yang dapat digunakan di akhir sprint."
+  },
+  {
+    cat:"Sistem Embedded & IoT",
+    q:"Protokol komunikasi ringan untuk IoT yang menggunakan model publish-subscribe dan dirancang untuk perangkat dengan bandwidth dan daya terbatas, berjalan di atas TCP/IP, adalah...",
+    o:["HTTP/2","WebSocket","MQTT (Message Queuing Telemetry Transport)","CoAP"],
+    a:2,
+    e:"<strong>MQTT</strong> adalah protokol messaging berbasis publish-subscribe yang sangat ringan, dirancang khusus untuk IoT dan perangkat dengan resource terbatas. Bekerja dengan: publisher mengirim pesan ke <em>broker</em> pada sebuah <em>topic</em>, kemudian broker mendistribusikan ke semua subscriber yang berlangganan topic tersebut. Port: 1883 (biasa), 8883 (TLS). Overhead header sangat kecil (minimum 2 bytes). Tools: Mosquitto, HiveMQ, AWS IoT Core."
+  },
+  {
+    cat:"Pemrograman Konkuren",
+    q:"Pola desain untuk menangani kegagalan dalam sistem terdistribusi yang secara otomatis 'memutus sirkuit' ketika service tujuan gagal berulang kali, mencegah cascade failure, disebut...",
+    o:["Retry Pattern","Bulkhead Pattern","Circuit Breaker Pattern","Timeout Pattern"],
+    a:2,
+    e:"<strong>Circuit Breaker Pattern</strong> memiliki tiga state: <em>Closed</em> (normal, request diizinkan), <em>Open</em> (circuit terbuka, semua request langsung gagal tanpa mencoba service), <em>Half-Open</em> (uji coba beberapa request untuk cek apakah service sudah pulih). Mencegah cascade failure di microservices. Implementasi: Netflix Hystrix, Resilience4j. Analogi: MCB listrik yang trip ketika arus berlebih."
+  },
+  {
+    cat:"Automata & Kompilasi",
+    q:"Fase dalam kompilasi yang memeriksa apakah ekspresi seperti <code>x = 5 + \"hello\"</code> valid berdasarkan aturan tipe data dan semantik bahasa disebut...",
+    o:["Lexical Analysis","Syntax Analysis","Semantic Analysis","Code Optimization"],
+    a:2,
+    e:"<strong>Semantic Analysis</strong> memeriksa makna kode — bukan hanya struktur (syntax) tapi apakah operasi masuk akal secara tipe dan konteks. Contoh pemeriksaan: type checking (int + string tidak valid), undeclared variable, function call dengan parameter salah, scope resolution. Outputnya adalah annotated parse tree atau abstract syntax tree (AST) yang siap untuk code generation. Error semantic: type mismatch, undeclared identifier."
+  },
+  {
+    cat:"Regulasi TI Terbaru",
+    q:"Pusat Data Nasional (PDN) yang menjadi infrastruktur konsolidasi data center pemerintah Indonesia dikelola oleh...",
+    o:["BSSN","Kementerian Keuangan","Kementerian Komunikasi dan Digital (Komdigi)","BRIN"],
+    a:2,
+    e:"<strong>Kementerian Komunikasi dan Digital (Komdigi)</strong> — sebelumnya Kementerian Kominfo — adalah pengelola Pusat Data Nasional (PDN) yang merupakan infrastruktur utama SPBE. PDN berfungsi mengkonsolidasikan pusat data pemerintah untuk efisiensi, keamanan, dan kemudahan pengelolaan. PDN mengalami insiden ransomware pada Juni 2024, mendorong peningkatan signifikan pada kebijakan keamanan siber data pemerintah."
+  },
+  {
+    cat:"Sistem Bilangan",
+    q:"Bilangan floating-point dalam format IEEE 754 single precision terdiri dari tiga bagian. Berapa bit yang digunakan untuk bagian <em>mantissa</em> (significand)?",
+    o:["8 bit","16 bit","23 bit","32 bit"],
+    a:2,
+    e:"<strong>IEEE 754 Single Precision (32-bit)</strong> terdiri dari: <em>Sign</em> = 1 bit (0=positif, 1=negatif), <em>Exponent</em> = 8 bit (bias 127), <em>Mantissa/Significand</em> = <strong>23 bit</strong>. Total = 32 bit. Nilai = (-1)^sign × 2^(exp-127) × 1.mantissa. Double Precision (64-bit): 1 bit sign, 11 bit exponent, 52 bit mantissa. Format IEEE 754 menjadi standar representasi bilangan riil di hampir semua CPU dan GPU modern."
+  }
+];
+
+
+// ===== STATE =====
+const SESSION_KEY = 'sesi-4';
+let cur = 0, ok = 0, no = 0, expVis = false;
+let answered = [];
+
+// ===== THEME =====
+function toggleDark() {
+  document.body.classList.toggle('dark');
+  const d = document.body.classList.contains('dark');
+  document.getElementById('theme-icon').className = d ? 'fas fa-sun' : 'fas fa-moon';
+  localStorage.setItem('cpns-theme', d?'dark':'light');
+}
+(function initTheme() {
+  if (localStorage.getItem('cpns-theme') === 'dark') {
+    document.body.classList.add('dark');
+    document.getElementById('theme-icon').className = 'fas fa-sun';
+  }
+  const p = JSON.parse(localStorage.getItem('cpns-profile') || '{"name":"U"}');
+  const ini = p.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'U';
+  document.getElementById('profile-mini').textContent = ini;
+  document.getElementById('profile-mini').title = p.name;
+})();
+
+// ===== QUIZ LOGIC =====
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  render();
+}
+
+
+let timerInterval;
+let timeLeft = 30 * 60;
+let sessionFinished = false;
+
+function startTimer() {
+  clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    if (sessionFinished) return;
+    timeLeft--;
+    updateTimerDisplay();
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      alert('Waktu pengerjaan sesi telah habis.');
+      showResult(true);
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+  const sec = String(timeLeft % 60).padStart(2, '0');
+  document.getElementById('timer').textContent = `${min}:${sec}`;
+}
+
+function stopSession() {
+  const confirmStop = confirm('Yakin ingin berhenti mengerjakan sesi ini? Nilai akan langsung disimpan ke riwayat.');
+  if (confirmStop) {
+    showResult(true);
+  }
+}
+
+function render() {
+  expVis = false;
+  const q = Q[cur];
+  document.getElementById('s-cur').textContent = cur+1;
+  document.getElementById('s-ok').textContent = ok;
+  document.getElementById('s-no').textContent = no;
+  document.getElementById('s-rem').textContent = Q.length - cur;
+  document.getElementById('prog').style.width = ((cur/Q.length)*100)+'%';
+  document.getElementById('sess-label').innerHTML = 
+    'Sesi <strong>4</strong> &bull; Soal <strong>'+(cur+1)+'</strong> dari <strong>'+Q.length+'</strong>';
+
+  const optHtml = q.o.map((o,i) => `
+    <button class="opt" id="opt-${i}" onclick="pick(${i})">
+      <span class="opt-key">${String.fromCharCode(65+i)}</span>
+      <span>${o}</span>
+    </button>`).join('');
+
+  document.getElementById('qarea').innerHTML = `
+    <div class="question-card">
+      <div class="q-meta">
+        <span class="q-num">SOAL ${cur+1} / ${Q.length}</span>
+        <span class="q-topic">${q.cat}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">${optHtml}</div>
+      <div class="explanation" id="exp">
+        <div class="exp-title">📖 Pembahasan</div>
+        <div class="exp-text">${q.e}</div>
+      </div>
+    </div>`;
+
+  document.getElementById('btn-nx').disabled = true;
+  document.getElementById('btn-exp').style.display = 'none';
+  document.getElementById('btn-exp').innerHTML = '<i class="fas fa-lightbulb" style="margin-right:6px"></i>Pembahasan';
+}
+
+function pick(idx) {
+  const q = Q[cur];
+  document.querySelectorAll('.opt').forEach(o => o.disabled = true);
+  const isOk = idx === q.a;
+  document.querySelectorAll('.opt')[idx].classList.add(isOk ? 'correct' : 'wrong');
+  document.querySelectorAll('.opt')[q.a].classList.add('correct');
+  if (isOk) ok++; else no++;
+  answered.push({qi:cur, sel:idx, ok:isOk});
+  document.getElementById('s-ok').textContent = ok;
+  document.getElementById('s-no').textContent = no;
+  document.getElementById('btn-nx').disabled = false;
+  document.getElementById('btn-exp').style.display = 'inline-flex';
+  document.getElementById('exp').classList.add('show');
+  document.getElementById('btn-exp').innerHTML = '<i class="fas fa-eye-slash" style="margin-right:6px"></i>Sembunyikan';
+  expVis = true;
+}
+
+function toggleExp() {
+  expVis = !expVis;
+  document.getElementById('exp').classList.toggle('show', expVis);
+  document.getElementById('btn-exp').innerHTML = expVis
+    ? '<i class="fas fa-eye-slash" style="margin-right:6px"></i>Sembunyikan'
+    : '<i class="fas fa-lightbulb" style="margin-right:6px"></i>Pembahasan';
+}
+
+function nextQ() {
+  cur++;
+  if (cur >= Q.length) showResult(); else render();
+}
+
+function showResult(forceStop = false) {
+  if (sessionFinished) return;
+  sessionFinished = true;
+  clearInterval(timerInterval);
+  document.getElementById('quiz').style.display = 'none';
+  const res = document.getElementById('result');
+  res.classList.add('show');
+  const pct = Math.round((ok/Q.length)*100);
+  const score = ok * 5;
+  document.getElementById('score-pct').textContent = pct+'%';
+  document.getElementById('r-ok').textContent = ok;
+  document.getElementById('r-no').textContent = no;
+  document.getElementById('r-sc').textContent = score;
+  document.getElementById('r-ans').textContent = answered.length + '/' + Q.length;
+  document.getElementById('score-circle').style.setProperty('--deg', Math.round((pct/100)*360)+'deg');
+  const title = pct>=80 ? '🏆 Luar Biasa!' : pct>=60 ? '👍 Cukup Baik' : '📚 Perlu Belajar Lagi';
+  const sub = forceStop ? `Sesi dihentikan pada soal ke-${answered.length}. Anda menjawab ${answered.length} dari ${Q.length} soal dengan skor ${score}. Nilai telah masuk ke riwayat.` : (pct>=80 ? 'Nilai Anda sangat baik. Siap menghadapi ujian CPNS!' : pct>=60 ? 'Di atas rata-rata. Terus tingkatkan pemahaman Anda.' : 'Pelajari kembali materi yang masih lemah dan coba lagi!');
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent = sub;
+
+  // Save score
+  const scores = JSON.parse(localStorage.getItem('cpns-scores')||'{}');
+  scores[SESSION_KEY] = { pct, score, correct:ok, wrong:no, date:new Date().toISOString() };
+  localStorage.setItem('cpns-scores', JSON.stringify(scores));
+
+  // Review
+  document.getElementById('revlist').innerHTML = answered.map(a => `
+    <div class="rev-item">
+      <span class="rev-icon">${a.ok ? '✅' : '❌'}</span>
+      <span class="rev-num">Soal ${a.qi+1}</span>
+      <span class="rev-topic">${Q[a.qi].cat}</span>
+      <span class="rev-status ${a.ok?'ok':'no'}">${a.ok ? 'Benar' : 'Salah — Jawaban: '+String.fromCharCode(65+Q[a.qi].a)}</span>
+    </div>`).join('');
+}
+
+function restart() {
+  cur=0; ok=0; no=0; answered=[];
+  sessionFinished = false;
+  timeLeft = 30 * 60;
+  startTimer();
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('quiz').style.display = 'block';
+  render();
+}
+
+startTimer();
+</script>
+</body>
+</html>

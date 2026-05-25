@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TKB CPNS – Pranata Komputer Sesi 1 — Fondasi Komputer</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+
+<link href="tkb-cpns-pranata-komputer.css" rel="stylesheet"/></head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+<a class="nav-back" href="index.html">
+<i class="fas fa-arrow-left"></i> Dashboard
+  </a>
+<div class="nav-title-area">
+<div class="nav-title">💻 Sesi 1 — Fondasi Komputer</div>
+<div class="nav-subtitle">30 Soal · Algoritma, Jaringan, Database, OS, Keamanan &amp; Cloud</div>
+</div>
+<div class="nav-right">
+<div class="timer-box"><i class="fas fa-clock"></i><span id="timer">30:00</span></div>
+<button class="theme-btn" id="theme-btn" onclick="toggleDark()" title="Ganti tema">
+<i class="fas fa-moon" id="theme-icon"></i>
+</button>
+<div class="profile-mini" id="profile-mini" title="Profil">U</div>
+</div>
+</nav>
+<!-- BREADCRUMB -->
+<div class="breadcrumb-bar">
+<i class="fas fa-home" style="font-size:.8rem"></i>
+<a class="bc-link" href="index.html">Dashboard</a>
+<span style="opacity:.4">›</span>
+<span style="color:var(--text);font-weight:600">Sesi 1 — Fondasi Komputer</span>
+</div>
+<div class="wrapper">
+<!-- INTRO -->
+<div id="intro">
+<div class="intro-card">
+<div class="intro-icon-wrap" style="background:linear-gradient(135deg,#4f46e5,#818cf8)">💻</div>
+<div class="intro-title">Sesi 1 — Fondasi Komputer</div>
+<p class="intro-desc">Paket soal pertama mencakup fondasi ilmu komputer untuk jabatan Pranata Komputer CPNS: algoritma &amp; kompleksitas, struktur data, jaringan, basis data, sistem operasi, keamanan informasi, cloud computing, dan rekayasa perangkat lunak.</p>
+<div class="intro-meta">
+<div class="meta-pill"><i class="fas fa-question-circle"></i> 30 Soal</div>
+<div class="meta-pill"><i class="fas fa-tags"></i> 8 Topik</div>
+<div class="meta-pill"><i class="fas fa-star"></i> Skor Maks: 150</div>
+</div>
+<div class="topics-wrap">
+<span class="topic-tag">🧮 Algoritma &amp; Struktur Data</span><span class="topic-tag">🌐 Jaringan Komputer</span><span class="topic-tag">🗄️ Basis Data</span><span class="topic-tag">🖥️ Sistem Operasi</span><span class="topic-tag">🔐 Keamanan Informasi</span><span class="topic-tag">⚙️ Rekayasa Perangkat Lunak</span><span class="topic-tag">☁️ Cloud Computing</span><span class="topic-tag">📊 Manajemen TI</span>
+</div>
+<button class="btn-start-quiz" onclick="startQuiz()">
+<i class="fas fa-play" style="margin-right:8px"></i>Mulai Ujian
+      </button>
+</div>
+</div>
+<!-- QUIZ -->
+<div id="quiz" style="display:none">
+<div class="stats-bar">
+<div class="stat"><div class="stat-val" id="s-cur">1</div><div class="stat-lbl">Soal ke</div></div>
+<div class="stat"><div class="stat-val g" id="s-ok">0</div><div class="stat-lbl">Benar</div></div>
+<div class="stat"><div class="stat-val r" id="s-no">0</div><div class="stat-lbl">Salah</div></div>
+<div class="stat"><div class="stat-val m" id="s-rem">30</div><div class="stat-lbl">Sisa</div></div>
+</div>
+<div class="prog-wrap"><div class="prog-bar" id="prog" style="width:0%"></div></div>
+<div class="session-label" id="sess-label"></div>
+<div id="qarea"></div>
+<div class="actions">
+<button class="btn btn-secondary" id="btn-exp" onclick="toggleExp()" style="display:none">
+<i class="fas fa-lightbulb" style="margin-right:6px"></i>Pembahasan
+      </button>
+<button class="btn btn-secondary" id="btn-stop" onclick="stopSession()">
+<i class="fas fa-stop-circle" style="margin-right:6px"></i>Berhenti
+      </button>
+<button class="btn btn-primary" disabled="" id="btn-nx" onclick="nextQ()">
+        Berikutnya <i class="fas fa-arrow-right" style="margin-left:6px"></i>
+</button>
+</div>
+</div>
+<!-- RESULT -->
+<div class="result-screen" id="result">
+<div class="result-top">
+<div class="score-circle" id="score-circle">
+<div class="score-val" id="score-pct">0%</div>
+</div>
+<div class="result-title" id="result-title">Hasil Ujian</div>
+<div class="result-sub" id="result-sub"></div>
+<div class="result-stats">
+<div class="rstat"><div class="rstat-val" id="r-ok" style="color:var(--correct)">0</div><div class="rstat-lbl">Benar</div></div>
+<div class="rstat"><div class="rstat-val" id="r-no" style="color:var(--wrong)">0</div><div class="rstat-lbl">Salah</div></div>
+<div class="rstat"><div class="rstat-val" id="r-sc" style="color:var(--accent)">0</div><div class="rstat-lbl">Skor</div></div>
+<div class="rstat"><div class="rstat-val" id="r-ans" style="color:var(--primary)">0/0</div><div class="rstat-lbl">Terjawab</div></div>
+</div>
+<div class="result-btns">
+<button class="btn btn-secondary" onclick="restart()">
+<i class="fas fa-redo" style="margin-right:6px"></i>Ulangi
+        </button>
+<button class="btn btn-primary" onclick="document.getElementById('rev').scrollIntoView({behavior:'smooth'})">
+<i class="fas fa-list-check" style="margin-right:6px"></i>Review Jawaban
+        </button>
+<a class="btn btn-secondary" href="index.html">
+<i class="fas fa-home" style="margin-right:6px"></i>Dashboard
+        </a>
+</div>
+</div>
+<div class="review-section" id="rev">
+<div class="review-head"><i class="fas fa-clipboard-list" style="margin-right:6px"></i>Rangkuman Jawaban</div>
+<div id="revlist"></div>
+</div>
+</div>
+</div>
+<script>
+// ===== QUESTIONS =====
+const Q = [
+  {
+    cat: "Algoritma",
+    q: "Manakah dari notasi Big-O berikut yang memiliki kompleksitas waktu paling efisien untuk kasus rata-rata?",
+    o: ["O(n²)", "O(n log n)", "O(log n)", "O(n)"],
+    a: 2,
+    e: "<strong>O(log n)</strong> adalah kompleksitas paling efisien di antara pilihan yang ada. Urutan dari paling efisien ke paling tidak efisien: O(1) < O(log n) < O(n) < O(n log n) < O(n²). Algoritma pencarian biner (binary search) memiliki kompleksitas O(log n) karena setiap iterasi membagi ruang pencarian menjadi setengahnya."
+  },
+  {
+    cat: "Struktur Data",
+    q: "Struktur data yang menggunakan prinsip LIFO (Last In First Out) adalah...",
+    o: ["Queue", "Stack", "Linked List", "Tree"],
+    a: 1,
+    e: "<strong>Stack</strong> menggunakan prinsip LIFO — elemen yang terakhir dimasukkan adalah yang pertama dikeluarkan. Contoh penggunaan: evaluasi ekspresi, pemanggilan fungsi rekursif, navigasi browser (tombol back). Sedangkan <strong>Queue</strong> menggunakan prinsip FIFO (First In First Out)."
+  },
+  {
+    cat: "Jaringan Komputer",
+    q: "IP Address 192.168.1.0/24 memiliki jumlah host yang dapat digunakan sebanyak...",
+    o: ["254 host", "256 host", "255 host", "253 host"],
+    a: 0,
+    e: "<strong>254 host</strong>. Prefix /24 berarti subnet mask 255.255.255.0 dengan 8 bit host. Total alamat = 2⁸ = 256. Dikurangi 1 untuk network address (192.168.1.0) dan 1 untuk broadcast address (192.168.1.255), maka host yang dapat digunakan = 256 − 2 = <strong>254 host</strong>."
+  },
+  {
+    cat: "Basis Data",
+    q: "Perintah SQL yang digunakan untuk mengambil data unik tanpa duplikasi dari sebuah tabel adalah...",
+    o: ["SELECT UNIQUE", "SELECT DISTINCT", "SELECT DIFFERENT", "SELECT NODUP"],
+    a: 1,
+    e: "<strong>SELECT DISTINCT</strong> digunakan untuk menampilkan nilai unik dari suatu kolom, menghilangkan baris duplikat dari hasil query. Contoh: <code>SELECT DISTINCT kota FROM pegawai;</code> akan menampilkan daftar kota tanpa pengulangan."
+  },
+  {
+    cat: "Sistem Operasi",
+    q: "Kondisi deadlock pada sistem operasi dapat terjadi jika memenuhi empat kondisi Coffman. Manakah yang BUKAN kondisi Coffman?",
+    o: ["Mutual Exclusion", "Hold and Wait", "Preemption", "Circular Wait"],
+    a: 2,
+    e: "Empat kondisi Coffman untuk deadlock adalah: (1) <strong>Mutual Exclusion</strong>, (2) <strong>Hold and Wait</strong>, (3) <strong>No Preemption</strong> (bukan Preemption), dan (4) <strong>Circular Wait</strong>. Kondisi <em>No Preemption</em> berarti sumber daya tidak dapat diambil paksa dari proses yang sedang memegangnya. Jika preemption diizinkan, deadlock tidak akan terjadi."
+  },
+  {
+    cat: "Keamanan Informasi",
+    q: "Serangan yang dilakukan dengan mengirimkan paket data dalam jumlah besar untuk membanjiri server sehingga tidak dapat melayani pengguna yang sah disebut...",
+    o: ["SQL Injection", "Man-in-the-Middle", "Denial of Service (DoS)", "Phishing"],
+    a: 2,
+    e: "<strong>Denial of Service (DoS)</strong> adalah serangan yang bertujuan membuat layanan tidak tersedia bagi pengguna yang sah dengan cara membanjiri server dengan request atau paket data berlebihan. Versi terdistribusinya disebut DDoS (Distributed DoS). SQL Injection menyerang basis data; Man-in-the-Middle menyadap komunikasi; Phishing memanipulasi psikologi pengguna."
+  },
+  {
+    cat: "Rekayasa PL",
+    q: "Dalam metodologi Scrum, pertemuan harian tim yang berlangsung singkat (maksimal 15 menit) untuk sinkronisasi pekerjaan disebut...",
+    o: ["Sprint Review", "Sprint Planning", "Daily Standup", "Retrospective"],
+    a: 2,
+    e: "<strong>Daily Standup</strong> (atau Daily Scrum) adalah pertemuan harian tim maksimal 15 menit untuk menjawab tiga pertanyaan: (1) Apa yang saya kerjakan kemarin? (2) Apa yang akan saya kerjakan hari ini? (3) Apakah ada hambatan? Sprint Review dilakukan di akhir sprint untuk mendemonstrasikan hasil; Sprint Planning di awal sprint; Retrospective untuk evaluasi proses."
+  },
+  {
+    cat: "Jaringan Komputer",
+    q: "Protokol yang digunakan untuk mengamankan komunikasi web (HTTPS) dengan mengenkripsi data menggunakan sertifikat digital adalah...",
+    o: ["FTP", "TLS/SSL", "Telnet", "SMTP"],
+    a: 1,
+    e: "<strong>TLS (Transport Layer Security)</strong>, penerus SSL (Secure Sockets Layer), adalah protokol kriptografi yang mengamankan komunikasi HTTPS. Ia menggunakan Public Key Infrastructure (PKI) dengan sertifikat digital untuk autentikasi server dan mengenkripsi data yang dikirim antara browser dan server. Port default HTTPS adalah 443."
+  },
+  {
+    cat: "Algoritma",
+    q: "Algoritma pengurutan yang memiliki kompleksitas waktu rata-rata O(n log n) dan menggunakan pendekatan 'divide and conquer' adalah...",
+    o: ["Bubble Sort", "Insertion Sort", "Merge Sort", "Selection Sort"],
+    a: 2,
+    e: "<strong>Merge Sort</strong> menggunakan pendekatan divide and conquer dengan kompleksitas O(n log n) pada semua kasus (terbaik, rata-rata, terburuk). Prosesnya: bagi array menjadi dua bagian, urutkan masing-masing secara rekursif, lalu gabungkan hasilnya. Bubble Sort, Insertion Sort, dan Selection Sort semuanya memiliki kompleksitas O(n²) pada kasus rata-rata."
+  },
+  {
+    cat: "Basis Data",
+    q: "Normalisasi basis data hingga bentuk 3NF (Third Normal Form) bertujuan untuk...",
+    o: [
+      "Mempercepat query SELECT",
+      "Menghilangkan redundansi data dan anomali update",
+      "Meningkatkan kapasitas penyimpanan",
+      "Membuat tampilan antarmuka lebih baik"
+    ],
+    a: 1,
+    e: "<strong>Normalisasi 3NF</strong> bertujuan menghilangkan redundansi data dan mencegah anomali (insert, update, delete). 3NF mensyaratkan: sudah dalam 2NF, dan tidak ada ketergantungan transitif (atribut non-key tidak bergantung pada atribut non-key lainnya). Ini memastikan setiap data hanya disimpan di satu tempat, sehingga pembaruan tidak perlu dilakukan di banyak baris."
+  },
+  {
+    cat: "Cloud Computing",
+    q: "Model layanan cloud yang menyediakan infrastruktur computing (server, storage, jaringan) sebagai layanan yang dapat disewa disebut...",
+    o: ["SaaS", "PaaS", "IaaS", "DaaS"],
+    a: 2,
+    e: "<strong>IaaS (Infrastructure as a Service)</strong> menyediakan infrastruktur IT dasar (server virtual, storage, jaringan) melalui internet. Contoh: AWS EC2, Google Compute Engine, Azure VMs. Perbandingan: <em>SaaS</em> = aplikasi siap pakai (Gmail, Office 365); <em>PaaS</em> = platform pengembangan (Heroku, Google App Engine); <em>IaaS</em> = infrastruktur virtual."
+  },
+  {
+    cat: "Sistem Operasi",
+    q: "Algoritma penjadwalan proses yang memberikan CPU kepada proses dengan burst time terpendek adalah...",
+    o: ["FCFS (First Come First Serve)", "Round Robin", "SJF (Shortest Job First)", "Priority Scheduling"],
+    a: 2,
+    e: "<strong>SJF (Shortest Job First)</strong> memilih proses dengan CPU burst time terpendek berikutnya untuk dieksekusi. Algoritma ini optimal dalam meminimalkan rata-rata waiting time. Namun, memiliki kelemahan berupa kemungkinan starvation (proses dengan burst time panjang menunggu sangat lama) dan kesulitan memprediksi burst time di masa depan."
+  },
+  {
+    cat: "Keamanan Informasi",
+    q: "Teknik yang digunakan peretas untuk mendapatkan akses dengan menyisipkan kode SQL berbahaya ke dalam input form web disebut...",
+    o: ["Cross-Site Scripting (XSS)", "SQL Injection", "Buffer Overflow", "Session Hijacking"],
+    a: 1,
+    e: "<strong>SQL Injection</strong> terjadi ketika input pengguna yang tidak divalidasi disertakan langsung dalam query SQL, memungkinkan penyerang memanipulasi database. Contoh: input <code>' OR '1'='1</code> dapat mem-bypass autentikasi. Pencegahan: gunakan parameterized queries / prepared statements, validasi input, dan prinsip least privilege pada user database."
+  },
+  {
+    cat: "Jaringan Komputer",
+    q: "Layer ke-4 pada model OSI yang bertanggung jawab atas pengiriman data end-to-end yang andal menggunakan protokol TCP adalah...",
+    o: ["Network Layer", "Session Layer", "Transport Layer", "Data Link Layer"],
+    a: 2,
+    e: "<strong>Transport Layer (Layer 4)</strong> bertanggung jawab atas komunikasi end-to-end yang andal. Protokol utamanya: <em>TCP</em> (connection-oriented, reliable, flow control) dan <em>UDP</em> (connectionless, cepat tapi tidak ada jaminan pengiriman). Layer ini juga menangani segmentasi data dan multiplexing menggunakan port number."
+  },
+  {
+    cat: "Rekayasa PL",
+    q: "Diagram UML yang menggambarkan interaksi antar objek dalam urutan waktu (sequence of messages) disebut...",
+    o: ["Class Diagram", "Use Case Diagram", "Sequence Diagram", "Activity Diagram"],
+    a: 2,
+    e: "<strong>Sequence Diagram</strong> menggambarkan interaksi antar objek dalam urutan waktu secara kronologis (dari atas ke bawah). Elemen utamanya: lifeline (garis hidup objek), activation bar, dan message arrows. Sangat berguna untuk memodelkan alur logika suatu use case secara rinci."
+  },
+  {
+    cat: "Algoritma",
+    q: "Pada algoritma pencarian biner (binary search), kondisi yang harus dipenuhi oleh array sebelum pencarian dilakukan adalah...",
+    o: ["Array harus berisi bilangan bulat", "Array harus sudah terurut", "Array harus memiliki panjang genap", "Array harus tidak memiliki duplikat"],
+    a: 1,
+    e: "<strong>Array harus sudah terurut</strong> (ascending atau descending) sebelum binary search dapat diterapkan. Binary search bekerja dengan membandingkan elemen tengah, lalu memilih setengah array yang relevan untuk pencarian selanjutnya. Jika array tidak terurut, hasilnya tidak dapat diandalkan. Kompleksitas: O(log n)."
+  },
+  {
+    cat: "Basis Data",
+    q: "Perintah SQL untuk menambahkan kolom baru pada tabel yang sudah ada adalah...",
+    o: [
+      "ALTER TABLE nama ADD COLUMN kolom tipe;",
+      "UPDATE TABLE nama SET kolom = tipe;",
+      "INSERT COLUMN kolom INTO nama;",
+      "MODIFY TABLE nama ADD kolom tipe;"
+    ],
+    a: 0,
+    e: "<strong>ALTER TABLE ... ADD COLUMN</strong> adalah sintaks yang benar untuk menambahkan kolom baru pada tabel yang sudah ada. Contoh lengkap: <code>ALTER TABLE pegawai ADD COLUMN alamat VARCHAR(200);</code>. Perintah ALTER TABLE juga bisa digunakan untuk MODIFY (ubah tipe kolom), DROP COLUMN (hapus kolom), dan ADD CONSTRAINT (tambah constraint)."
+  },
+  {
+    cat: "Sistem Operasi",
+    q: "Teknik manajemen memori yang memungkinkan program menggunakan lebih banyak memori dari yang tersedia secara fisik dengan memanfaatkan disk sebagai ekstensi RAM disebut...",
+    o: ["Cache Memory", "Virtual Memory", "Register Memory", "Flash Memory"],
+    a: 1,
+    e: "<strong>Virtual Memory</strong> memungkinkan sistem operasi menjalankan program yang lebih besar dari RAM fisik dengan menggunakan sebagian disk (swap space/page file) sebagai 'RAM tambahan'. Tekniknya menggunakan paging dan demand paging. Kelemahannya adalah akses disk jauh lebih lambat dari RAM, sehingga performa bisa menurun (thrashing)."
+  },
+  {
+    cat: "Keamanan Informasi",
+    q: "Proses mengubah data terenkripsi kembali ke bentuk aslinya dengan menggunakan kunci yang sesuai disebut...",
+    o: ["Enkripsi", "Hashing", "Dekripsi", "Steganografi"],
+    a: 2,
+    e: "<strong>Dekripsi</strong> adalah proses membalik enkripsi — mengubah ciphertext (data terenkripsi) kembali menjadi plaintext (data asli) menggunakan kunci dekripsi. Berbeda dengan <em>hashing</em> yang merupakan fungsi satu arah (tidak bisa dibalik). Enkripsi simetris menggunakan kunci yang sama untuk enkripsi dan dekripsi (AES, DES), sedangkan enkripsi asimetris menggunakan pasangan kunci publik-privat (RSA)."
+  },
+  {
+    cat: "Cloud Computing",
+    q: "Kemampuan cloud computing untuk menambah atau mengurangi kapasitas sumber daya komputasi secara otomatis sesuai kebutuhan disebut...",
+    o: ["High Availability", "Scalability / Elasticity", "Fault Tolerance", "Load Balancing"],
+    a: 1,
+    e: "<strong>Scalability / Elasticity</strong> adalah kemampuan sistem cloud untuk secara dinamis menyesuaikan kapasitas (naik = scale up/out, turun = scale down/in) sesuai beban kerja. <em>High Availability</em> memastikan layanan selalu tersedia; <em>Fault Tolerance</em> kemampuan beroperasi meski ada komponen yang gagal; <em>Load Balancing</em> mendistribusikan beban ke beberapa server."
+  },
+  {
+    cat: "Rekayasa PL",
+    q: "Konsep OOP yang memungkinkan sebuah class mewarisi properti dan metode dari class lain disebut...",
+    o: ["Encapsulation", "Polymorphism", "Abstraction", "Inheritance"],
+    a: 3,
+    e: "<strong>Inheritance (Pewarisan)</strong> memungkinkan subclass (child class) mewarisi atribut dan metode dari superclass (parent class), mendukung reusability kode. Konsep OOP lainnya: <em>Encapsulation</em> = menyembunyikan detail implementasi; <em>Polymorphism</em> = satu interface banyak bentuk implementasi; <em>Abstraction</em> = menyembunyikan kompleksitas, hanya menampilkan fungsi esensial."
+  },
+  {
+    cat: "Jaringan Komputer",
+    q: "Perangkat jaringan yang bekerja pada Layer 3 (Network Layer) OSI dan berfungsi menghubungkan dua atau lebih jaringan berbeda serta menentukan jalur terbaik pengiriman paket adalah...",
+    o: ["Switch", "Hub", "Router", "Bridge"],
+    a: 2,
+    e: "<strong>Router</strong> bekerja di Layer 3 (Network Layer) dan bertugas meneruskan paket data antar jaringan berbeda berdasarkan IP address, menggunakan routing table dan protokol routing (OSPF, BGP, RIP). Perbandingan: <em>Hub</em> = Layer 1, broadcast semua; <em>Switch</em> = Layer 2, berdasarkan MAC address; <em>Bridge</em> = Layer 2, menghubungkan dua segmen LAN."
+  },
+  {
+    cat: "Basis Data",
+    q: "Jenis index pada basis data yang hanya memperbolehkan satu nilai unik untuk setiap baris dan digunakan untuk memastikan integritas data adalah...",
+    o: ["Composite Index", "Full-Text Index", "Unique Index", "Clustered Index"],
+    a: 2,
+    e: "<strong>Unique Index</strong> memastikan semua nilai dalam kolom yang diindeks bersifat unik — tidak ada duplikasi. Jika terdapat Primary Key, secara otomatis dibuat unique index. Digunakan misalnya pada kolom email, NIK, atau NIP untuk mencegah data ganda. <em>Clustered Index</em> menentukan urutan fisik penyimpanan data; <em>Composite Index</em> mencakup lebih dari satu kolom."
+  },
+  {
+    cat: "Algoritma",
+    q: "Dalam pemrograman, fungsi yang memanggil dirinya sendiri untuk menyelesaikan suatu masalah dengan memecahnya menjadi sub-masalah yang lebih kecil disebut...",
+    o: ["Iterasi", "Rekursi", "Polimorfisme", "Abstraksi"],
+    a: 1,
+    e: "<strong>Rekursi</strong> adalah teknik di mana fungsi memanggil dirinya sendiri. Setiap fungsi rekursif harus memiliki: (1) <em>Base case</em> (kondisi berhenti) dan (2) <em>Recursive case</em> (fungsi memanggil dirinya dengan parameter yang lebih kecil/sederhana). Contoh klasik: faktorial, Fibonacci, Towers of Hanoi, traversal pohon."
+  },
+  {
+    cat: "Sistem Operasi",
+    q: "Perintah Linux yang digunakan untuk melihat proses yang sedang berjalan beserta penggunaan CPU dan memorinya secara real-time adalah...",
+    o: ["ps", "ls", "top", "df"],
+    a: 2,
+    e: "<strong>top</strong> menampilkan proses yang berjalan secara real-time dengan informasi CPU, memori, PID, dan lainnya. Perintah terkait: <code>htop</code> (versi interaktif), <code>ps aux</code> (snapshot proses), <code>kill PID</code> (menghentikan proses). <em>ls</em> = daftar file/folder; <em>df</em> = disk usage filesystem."
+  },
+  {
+    cat: "Keamanan Informasi",
+    q: "Standar internasional yang mengatur Sistem Manajemen Keamanan Informasi (SMKI/ISMS) dan banyak diadopsi oleh instansi pemerintah Indonesia adalah...",
+    o: ["ISO 9001", "ISO/IEC 27001", "ISO 14001", "COBIT 5"],
+    a: 1,
+    e: "<strong>ISO/IEC 27001</strong> adalah standar internasional untuk Sistem Manajemen Keamanan Informasi (ISMS). Standar ini menetapkan persyaratan untuk membangun, menerapkan, memelihara, dan terus meningkatkan keamanan informasi. Di Indonesia, instansi pemerintah didorong memperoleh sertifikasi ini sesuai Peraturan Presiden No. 95 Tahun 2018 tentang SPBE."
+  },
+  {
+    cat: "Rekayasa PL",
+    q: "Praktik pengembangan perangkat lunak di mana pengujian (test) ditulis sebelum kode implementasi ditulis disebut...",
+    o: ["Behavior Driven Development", "Test Driven Development (TDD)", "Integration Testing", "Regression Testing"],
+    a: 1,
+    e: "<strong>Test Driven Development (TDD)</strong> mengikuti siklus Red-Green-Refactor: (1) Tulis test yang gagal (Red), (2) Tulis kode minimal agar test lulus (Green), (3) Refactor kode sambil memastikan test tetap lulus. TDD menghasilkan kode yang lebih bersih, terdokumentasi, dan mudah di-maintain. BDD adalah evolusi TDD yang fokus pada behavior dari perspektif bisnis."
+  },
+  {
+    cat: "Jaringan Komputer",
+    q: "Protokol yang digunakan untuk menerjemahkan nama domain (seperti www.kominfo.go.id) menjadi alamat IP adalah...",
+    o: ["DHCP", "DNS", "ARP", "NAT"],
+    a: 1,
+    e: "<strong>DNS (Domain Name System)</strong> adalah sistem hierarki terdistribusi yang menerjemahkan nama domain menjadi alamat IP. Prosesnya: browser → DNS Resolver → Root Server → TLD Server → Authoritative Name Server → IP Address. <em>DHCP</em> = memberi IP otomatis; <em>ARP</em> = menerjemahkan IP ke MAC address; <em>NAT</em> = mengubah IP privat ke publik."
+  },
+  {
+    cat: "Manajemen TI",
+    q: "Framework tata kelola TI yang mengintegrasikan praktik terbaik untuk membantu organisasi mencapai tujuan strategis melalui penggunaan TI yang efektif, dikembangkan oleh ISACA adalah...",
+    o: ["ITIL", "COBIT", "TOGAF", "PMBoK"],
+    a: 1,
+    e: "<strong>COBIT (Control Objectives for Information and Related Technologies)</strong> adalah framework tata kelola dan manajemen TI yang dikembangkan oleh ISACA. Versi terbaru COBIT 2019 memiliki 40 tujuan tata kelola dan manajemen yang mencakup 5 domain. <em>ITIL</em> = manajemen layanan TI; <em>TOGAF</em> = arsitektur enterprise; <em>PMBoK</em> = manajemen proyek."
+  },
+  {
+    cat: "Basis Data",
+    q: "Pernyataan berikut yang paling tepat menggambarkan perbedaan antara DDL dan DML dalam SQL adalah...",
+    o: [
+      "DDL untuk mengambil data, DML untuk mendefinisikan struktur",
+      "DDL mendefinisikan struktur database (CREATE, ALTER, DROP), DML memanipulasi data (INSERT, UPDATE, DELETE)",
+      "DDL dan DML adalah sama, hanya berbeda nama",
+      "DDL untuk keamanan data, DML untuk backup data"
+    ],
+    a: 1,
+    e: "<strong>DDL (Data Definition Language)</strong> digunakan untuk mendefinisikan dan mengubah struktur objek database: <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code>. <strong>DML (Data Manipulation Language)</strong> digunakan untuk memanipulasi data di dalam tabel: <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>SELECT</code>. Ada juga DCL (Data Control Language) untuk hak akses: GRANT, REVOKE."
+  }
+];
+
+
+// ===== STATE =====
+const SESSION_KEY = 'sesi-1';
+let cur = 0, ok = 0, no = 0, expVis = false;
+let answered = [];
+
+// ===== THEME =====
+function toggleDark() {
+  document.body.classList.toggle('dark');
+  const d = document.body.classList.contains('dark');
+  document.getElementById('theme-icon').className = d ? 'fas fa-sun' : 'fas fa-moon';
+  localStorage.setItem('cpns-theme', d?'dark':'light');
+}
+(function initTheme() {
+  if (localStorage.getItem('cpns-theme') === 'dark') {
+    document.body.classList.add('dark');
+    document.getElementById('theme-icon').className = 'fas fa-sun';
+  }
+  const p = JSON.parse(localStorage.getItem('cpns-profile') || '{"name":"U"}');
+  const ini = p.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'U';
+  document.getElementById('profile-mini').textContent = ini;
+  document.getElementById('profile-mini').title = p.name;
+})();
+
+// ===== QUIZ LOGIC =====
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  render();
+}
+
+
+let timerInterval;
+let timeLeft = 30 * 60;
+let sessionFinished = false;
+
+function startTimer() {
+  clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    if (sessionFinished) return;
+    timeLeft--;
+    updateTimerDisplay();
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      alert('Waktu pengerjaan sesi telah habis.');
+      showResult(true);
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+  const sec = String(timeLeft % 60).padStart(2, '0');
+  document.getElementById('timer').textContent = `${min}:${sec}`;
+}
+
+function stopSession() {
+  const confirmStop = confirm('Yakin ingin berhenti mengerjakan sesi ini? Nilai akan langsung disimpan ke riwayat.');
+  if (confirmStop) {
+    showResult(true);
+  }
+}
+
+function render() {
+  expVis = false;
+  const q = Q[cur];
+  document.getElementById('s-cur').textContent = cur+1;
+  document.getElementById('s-ok').textContent = ok;
+  document.getElementById('s-no').textContent = no;
+  document.getElementById('s-rem').textContent = Q.length - cur;
+  document.getElementById('prog').style.width = ((cur/Q.length)*100)+'%';
+  document.getElementById('sess-label').innerHTML = 
+    'Sesi <strong>1</strong> &bull; Soal <strong>'+(cur+1)+'</strong> dari <strong>'+Q.length+'</strong>';
+
+  const optHtml = q.o.map((o,i) => `
+    <button class="opt" id="opt-${i}" onclick="pick(${i})">
+      <span class="opt-key">${String.fromCharCode(65+i)}</span>
+      <span>${o}</span>
+    </button>`).join('');
+
+  document.getElementById('qarea').innerHTML = `
+    <div class="question-card">
+      <div class="q-meta">
+        <span class="q-num">SOAL ${cur+1} / ${Q.length}</span>
+        <span class="q-topic">${q.cat}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">${optHtml}</div>
+      <div class="explanation" id="exp">
+        <div class="exp-title">📖 Pembahasan</div>
+        <div class="exp-text">${q.e}</div>
+      </div>
+    </div>`;
+
+  document.getElementById('btn-nx').disabled = true;
+  document.getElementById('btn-exp').style.display = 'none';
+  document.getElementById('btn-exp').innerHTML = '<i class="fas fa-lightbulb" style="margin-right:6px"></i>Pembahasan';
+}
+
+function pick(idx) {
+  const q = Q[cur];
+  document.querySelectorAll('.opt').forEach(o => o.disabled = true);
+  const isOk = idx === q.a;
+  document.querySelectorAll('.opt')[idx].classList.add(isOk ? 'correct' : 'wrong');
+  document.querySelectorAll('.opt')[q.a].classList.add('correct');
+  if (isOk) ok++; else no++;
+  answered.push({qi:cur, sel:idx, ok:isOk});
+  document.getElementById('s-ok').textContent = ok;
+  document.getElementById('s-no').textContent = no;
+  document.getElementById('btn-nx').disabled = false;
+  document.getElementById('btn-exp').style.display = 'inline-flex';
+  document.getElementById('exp').classList.add('show');
+  document.getElementById('btn-exp').innerHTML = '<i class="fas fa-eye-slash" style="margin-right:6px"></i>Sembunyikan';
+  expVis = true;
+}
+
+function toggleExp() {
+  expVis = !expVis;
+  document.getElementById('exp').classList.toggle('show', expVis);
+  document.getElementById('btn-exp').innerHTML = expVis
+    ? '<i class="fas fa-eye-slash" style="margin-right:6px"></i>Sembunyikan'
+    : '<i class="fas fa-lightbulb" style="margin-right:6px"></i>Pembahasan';
+}
+
+function nextQ() {
+  cur++;
+  if (cur >= Q.length) showResult(); else render();
+}
+
+function showResult(forceStop = false) {
+  if (sessionFinished) return;
+  sessionFinished = true;
+  clearInterval(timerInterval);
+  document.getElementById('quiz').style.display = 'none';
+  const res = document.getElementById('result');
+  res.classList.add('show');
+  const pct = Math.round((ok/Q.length)*100);
+  const score = ok * 5;
+  document.getElementById('score-pct').textContent = pct+'%';
+  document.getElementById('r-ok').textContent = ok;
+  document.getElementById('r-no').textContent = no;
+  document.getElementById('r-sc').textContent = score;
+  document.getElementById('r-ans').textContent = answered.length + '/' + Q.length;
+  document.getElementById('score-circle').style.setProperty('--deg', Math.round((pct/100)*360)+'deg');
+  const title = pct>=80 ? '🏆 Luar Biasa!' : pct>=60 ? '👍 Cukup Baik' : '📚 Perlu Belajar Lagi';
+  const sub = forceStop ? `Sesi dihentikan pada soal ke-${answered.length}. Anda menjawab ${answered.length} dari ${Q.length} soal dengan skor ${score}. Nilai telah masuk ke riwayat.` : (pct>=80 ? 'Nilai Anda sangat baik. Siap menghadapi ujian CPNS!' : pct>=60 ? 'Di atas rata-rata. Terus tingkatkan pemahaman Anda.' : 'Pelajari kembali materi yang masih lemah dan coba lagi!');
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent = sub;
+
+  // Save score
+  const scores = JSON.parse(localStorage.getItem('cpns-scores')||'{}');
+  scores[SESSION_KEY] = { pct, score, correct:ok, wrong:no, date:new Date().toISOString() };
+  localStorage.setItem('cpns-scores', JSON.stringify(scores));
+
+  // Review
+  document.getElementById('revlist').innerHTML = answered.map(a => `
+    <div class="rev-item">
+      <span class="rev-icon">${a.ok ? '✅' : '❌'}</span>
+      <span class="rev-num">Soal ${a.qi+1}</span>
+      <span class="rev-topic">${Q[a.qi].cat}</span>
+      <span class="rev-status ${a.ok?'ok':'no'}">${a.ok ? 'Benar' : 'Salah — Jawaban: '+String.fromCharCode(65+Q[a.qi].a)}</span>
+    </div>`).join('');
+}
+
+function restart() {
+  cur=0; ok=0; no=0; answered=[];
+  sessionFinished = false;
+  timeLeft = 30 * 60;
+  startTimer();
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('quiz').style.display = 'block';
+  render();
+}
+
+startTimer();
+</script>
+</body>
+</html>

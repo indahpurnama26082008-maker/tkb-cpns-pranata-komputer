@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TKB CPNS – Pranata Komputer Sesi 3 — DevOps &amp; Cloud Native</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+
+<link href="tkb-cpns-pranata-komputer-3.css" rel="stylesheet"/></head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+<a class="nav-back" href="index.html">
+<i class="fas fa-arrow-left"></i> Dashboard
+  </a>
+<div class="nav-title-area">
+<div class="nav-title">🚀 Sesi 3 — DevOps &amp; Cloud Native</div>
+<div class="nav-subtitle">30 Soal · Docker, Kubernetes, Microservices, IPv6 &amp; Keamanan Aplikasi</div>
+</div>
+<div class="nav-right">
+<div class="timer-box"><i class="fas fa-clock"></i><span id="timer">30:00</span></div>
+<button class="theme-btn" id="theme-btn" onclick="toggleDark()" title="Ganti tema">
+<i class="fas fa-moon" id="theme-icon"></i>
+</button>
+<div class="profile-mini" id="profile-mini" title="Profil">U</div>
+</div>
+</nav>
+<!-- BREADCRUMB -->
+<div class="breadcrumb-bar">
+<i class="fas fa-home" style="font-size:.8rem"></i>
+<a class="bc-link" href="index.html">Dashboard</a>
+<span style="opacity:.4">›</span>
+<span style="color:var(--text);font-weight:600">Sesi 3 — DevOps &amp; Cloud Native</span>
+</div>
+<div class="wrapper">
+<!-- INTRO -->
+<div id="intro">
+<div class="intro-card">
+<div class="intro-icon-wrap" style="background:linear-gradient(135deg,#f59e0b,#fcd34d)">🚀</div>
+<div class="intro-title">Sesi 3 — DevOps &amp; Cloud Native</div>
+<p class="intro-desc">Paket soal ketiga untuk tingkat lanjut: pipeline CI/CD, containerisasi Docker/Kubernetes, arsitektur microservices, keamanan aplikasi web (OWASP), IPv6, sistem terdistribusi (CAP theorem), dan regulasi TI terbaru.</p>
+<div class="intro-meta">
+<div class="meta-pill"><i class="fas fa-question-circle"></i> 30 Soal</div>
+<div class="meta-pill"><i class="fas fa-tags"></i> 8 Topik</div>
+<div class="meta-pill"><i class="fas fa-star"></i> Skor Maks: 150</div>
+</div>
+<div class="topics-wrap">
+<span class="topic-tag">⚙️ DevOps &amp; CI/CD</span><span class="topic-tag">🐳 Docker &amp; Kubernetes</span><span class="topic-tag">🏗️ Microservices</span><span class="topic-tag">🔒 Keamanan Aplikasi</span><span class="topic-tag">🌍 IPv6 &amp; Routing</span><span class="topic-tag">📦 Sistem Terdistribusi</span><span class="topic-tag">📜 Kebijakan TI Pemerintah</span><span class="topic-tag">🧠 Struktur Data Lanjut</span>
+</div>
+<button class="btn-start-quiz" onclick="startQuiz()">
+<i class="fas fa-play" style="margin-right:8px"></i>Mulai Ujian
+      </button>
+</div>
+</div>
+<!-- QUIZ -->
+<div id="quiz" style="display:none">
+<div class="stats-bar">
+<div class="stat"><div class="stat-val" id="s-cur">1</div><div class="stat-lbl">Soal ke</div></div>
+<div class="stat"><div class="stat-val g" id="s-ok">0</div><div class="stat-lbl">Benar</div></div>
+<div class="stat"><div class="stat-val r" id="s-no">0</div><div class="stat-lbl">Salah</div></div>
+<div class="stat"><div class="stat-val m" id="s-rem">30</div><div class="stat-lbl">Sisa</div></div>
+</div>
+<div class="prog-wrap"><div class="prog-bar" id="prog" style="width:0%"></div></div>
+<div class="session-label" id="sess-label"></div>
+<div id="qarea"></div>
+<div class="actions">
+<button class="btn btn-secondary" id="btn-exp" onclick="toggleExp()" style="display:none">
+<i class="fas fa-lightbulb" style="margin-right:6px"></i>Pembahasan
+      </button>
+<button class="btn btn-secondary" id="btn-stop" onclick="stopSession()">
+<i class="fas fa-stop-circle" style="margin-right:6px"></i>Berhenti
+      </button>
+<button class="btn btn-primary" disabled="" id="btn-nx" onclick="nextQ()">
+        Berikutnya <i class="fas fa-arrow-right" style="margin-left:6px"></i>
+</button>
+</div>
+</div>
+<!-- RESULT -->
+<div class="result-screen" id="result">
+<div class="result-top">
+<div class="score-circle" id="score-circle">
+<div class="score-val" id="score-pct">0%</div>
+</div>
+<div class="result-title" id="result-title">Hasil Ujian</div>
+<div class="result-sub" id="result-sub"></div>
+<div class="result-stats">
+<div class="rstat"><div class="rstat-val" id="r-ok" style="color:var(--correct)">0</div><div class="rstat-lbl">Benar</div></div>
+<div class="rstat"><div class="rstat-val" id="r-no" style="color:var(--wrong)">0</div><div class="rstat-lbl">Salah</div></div>
+<div class="rstat"><div class="rstat-val" id="r-sc" style="color:var(--accent)">0</div><div class="rstat-lbl">Skor</div></div>
+<div class="rstat"><div class="rstat-val" id="r-ans" style="color:var(--primary)">0/0</div><div class="rstat-lbl">Terjawab</div></div>
+</div>
+<div class="result-btns">
+<button class="btn btn-secondary" onclick="restart()">
+<i class="fas fa-redo" style="margin-right:6px"></i>Ulangi
+        </button>
+<button class="btn btn-primary" onclick="document.getElementById('rev').scrollIntoView({behavior:'smooth'})">
+<i class="fas fa-list-check" style="margin-right:6px"></i>Review Jawaban
+        </button>
+<a class="btn btn-secondary" href="index.html">
+<i class="fas fa-home" style="margin-right:6px"></i>Dashboard
+        </a>
+</div>
+</div>
+<div class="review-section" id="rev">
+<div class="review-head"><i class="fas fa-clipboard-list" style="margin-right:6px"></i>Rangkuman Jawaban</div>
+<div id="revlist"></div>
+</div>
+</div>
+</div>
+<script>
+// ===== QUESTIONS =====
+const Q = [
+  {
+    cat:"DevOps & CI/CD",
+    q:"Dalam pipeline CI/CD, tahap yang secara otomatis menjalankan serangkaian pengujian setelah kode baru di-push ke repository disebut...",
+    o:["Continuous Deployment","Continuous Delivery","Continuous Integration","Continuous Monitoring"],
+    a:2,
+    e:"<strong>Continuous Integration (CI)</strong> adalah praktik di mana developer sering menggabungkan perubahan kode ke repository bersama, dan setiap push memicu proses build dan automated test secara otomatis. Tujuannya: mendeteksi bug lebih awal. <em>Continuous Delivery</em> = kode selalu siap di-deploy ke produksi; <em>Continuous Deployment</em> = deploy ke produksi otomatis tanpa intervensi manual. Tools populer: Jenkins, GitLab CI, GitHub Actions."
+  },
+  {
+    cat:"Docker & Kubernetes",
+    q:"Perintah Docker yang digunakan untuk membangun (build) sebuah image dari Dockerfile yang ada di direktori saat ini adalah...",
+    o:["docker run .",
+       "docker pull .",
+       "docker build -t nama-image .",
+       "docker create nama-image"],
+    a:2,
+    e:"<strong><code>docker build -t nama-image .</code></strong> digunakan untuk membangun image dari Dockerfile di direktori saat ini. Flag <code>-t</code> memberikan nama (tag) pada image. Titik (<code>.</code>) menunjukkan build context adalah direktori saat ini. Setelah image dibuat, gunakan <code>docker run</code> untuk menjalankannya sebagai container."
+  },
+  {
+    cat:"Microservices",
+    q:"Pola arsitektur microservices yang bertindak sebagai pintu masuk tunggal (single entry point) untuk semua client request dan mengelola routing ke layanan-layanan di belakangnya disebut...",
+    o:["Service Mesh","Message Broker","API Gateway","Load Balancer"],
+    a:2,
+    e:"<strong>API Gateway</strong> adalah komponen yang bertindak sebagai reverse proxy terpadu — menerima semua request client, mengarahkannya ke microservice yang tepat, serta menangani cross-cutting concerns seperti autentikasi, rate limiting, logging, dan SSL termination. Contoh: Kong, AWS API Gateway, Nginx. <em>Service Mesh</em> (Istio, Linkerd) mengelola komunikasi antar service; <em>Message Broker</em> (Kafka, RabbitMQ) untuk komunikasi asinkron."
+  },
+  {
+    cat:"Keamanan Aplikasi",
+    q:"Serangan web di mana penyerang menyisipkan script berbahaya (biasanya JavaScript) ke dalam halaman web yang kemudian dieksekusi oleh browser pengguna lain disebut...",
+    o:["CSRF (Cross-Site Request Forgery)","SQL Injection","XSS (Cross-Site Scripting)","Path Traversal"],
+    a:2,
+    e:"<strong>XSS (Cross-Site Scripting)</strong> terjadi ketika aplikasi menerima input tidak terpercaya dan menampilkannya ke browser tanpa validasi, sehingga script berbahaya berjalan di konteks pengguna yang sah. Ada tiga jenis: <em>Reflected XSS</em> (via URL), <em>Stored XSS</em> (tersimpan di database), <em>DOM-based XSS</em>. Pencegahan: encode output, gunakan Content Security Policy (CSP), validasi input."
+  },
+  {
+    cat:"IPv6 & Routing",
+    q:"Panjang alamat IPv6 dalam bit adalah...",
+    o:["32 bit","64 bit","128 bit","256 bit"],
+    a:2,
+    e:"<strong>IPv6 menggunakan alamat 128 bit</strong> (dibanding IPv4 yang hanya 32 bit), memungkinkan sekitar 3,4 × 10³⁸ alamat unik. Ditulis dalam 8 kelompok 4 digit heksadesimal dipisahkan titik dua, contoh: <code>2001:0db8:85a3:0000:0000:8a2e:0370:7334</code>. IPv6 dikembangkan untuk mengatasi habisnya ruang alamat IPv4 dan dilengkapi fitur seperti auto-konfigurasi (SLAAC) dan keamanan bawaan (IPsec)."
+  },
+  {
+    cat:"Sistem Terdistribusi",
+    q:"Teorema CAP dalam sistem terdistribusi menyatakan bahwa sistem hanya dapat menjamin dua dari tiga properti secara bersamaan. Ketiga properti tersebut adalah...",
+    o:["Consistency, Availability, Partition Tolerance","Concurrency, Atomicity, Performance","Caching, Availability, Processing","Coherency, Atomicity, Parallelism"],
+    a:0,
+    e:"<strong>Teorema CAP (Brewer's Theorem)</strong> menyatakan sistem terdistribusi tidak dapat menjamin ketiga properti secara bersamaan: <em>Consistency</em> (semua node mendapat data sama), <em>Availability</em> (setiap request mendapat respons), <em>Partition Tolerance</em> (sistem tetap berjalan meski ada network partition). Contoh: MongoDB (CP), Cassandra (AP), Zookeeper (CP). Dalam praktik, P hampir selalu diperlukan, sehingga pilihan antara C dan A."
+  },
+  {
+    cat:"Kebijakan TI Pemerintah",
+    q:"Kebijakan yang mengharuskan seluruh Penyelenggara Sistem Elektronik (PSE) lingkup privat untuk mendaftarkan diri kepada pemerintah Indonesia diatur dalam...",
+    o:["PP No. 71 Tahun 2019","Permenkominfo No. 5 Tahun 2020","UU ITE No. 11 Tahun 2008","Perpres No. 95 Tahun 2018"],
+    a:1,
+    e:"<strong>Permenkominfo No. 5 Tahun 2020</strong> tentang Penyelenggara Sistem Elektronik (PSE) Lingkup Privat mewajibkan seluruh PSE — termasuk platform digital asing yang beroperasi di Indonesia — untuk mendaftarkan diri ke Kominfo. Kewajiban ini mencakup mematuhi permintaan pemutusan akses konten yang melanggar hukum Indonesia. Aturan ini sempat viral karena memaksa platform besar seperti Google, Meta, dan Twitter mendaftar."
+  },
+  {
+    cat:"Struktur Data Lanjut",
+    q:"Jenis pohon (tree) yang memiliki sifat di mana setiap node memiliki nilai lebih besar dari semua node di subtree kirinya dan lebih kecil dari semua node di subtree kanannya disebut...",
+    o:["AVL Tree","B-Tree","Binary Search Tree (BST)","Heap"],
+    a:2,
+    e:"<strong>Binary Search Tree (BST)</strong> adalah struktur data pohon dengan properti: nilai di subtree kiri &lt; nilai node &lt; nilai di subtree kanan. Operasi pencarian, insersi, dan penghapusan rata-rata O(log n). Namun jika tidak seimbang (skewed), bisa menjadi O(n). <em>AVL Tree</em> adalah BST yang self-balancing; <em>B-Tree</em> digunakan di database untuk indexing; <em>Heap</em> digunakan untuk priority queue."
+  },
+  {
+    cat:"DevOps & CI/CD",
+    q:"Pendekatan pengembangan infrastruktur di mana konfigurasi server dan infrastruktur dikelola menggunakan kode dan versi control layaknya kode aplikasi disebut...",
+    o:["Agile Development","Infrastructure as Code (IaC)","Platform as a Service","Rapid Application Development"],
+    a:1,
+    e:"<strong>Infrastructure as Code (IaC)</strong> memungkinkan pengelolaan infrastruktur (server, jaringan, database) melalui file konfigurasi yang dapat di-version, di-test, dan di-deploy secara otomatis — menggantikan proses manual. Tools populer: <em>Terraform</em> (cloud-agnostic), <em>Ansible</em> (configuration management), <em>CloudFormation</em> (AWS), <em>Pulumi</em>. Manfaat: konsistensi, reproduktibilitas, dan auditabilitas infrastruktur."
+  },
+  {
+    cat:"Docker & Kubernetes",
+    q:"Dalam Kubernetes, komponen yang bertanggung jawab untuk mendistribusikan pod ke node yang tersedia berdasarkan kebutuhan resource dan constraint disebut...",
+    o:["kubelet","kube-proxy","kube-scheduler","etcd"],
+    a:2,
+    e:"<strong>kube-scheduler</strong> bertanggung jawab memantau pod yang baru dibuat dan belum memiliki node, lalu memilih node terbaik berdasarkan ketersediaan resource (CPU, memori), constraint, dan kebijakan lainnya. Komponen Kubernetes lainnya: <em>kubelet</em> = agent di tiap node untuk menjalankan pod; <em>kube-proxy</em> = manajemen network rules; <em>etcd</em> = key-value store untuk menyimpan state cluster."
+  },
+  {
+    cat:"Keamanan Aplikasi",
+    q:"Metode autentikasi berbasis token di mana server menerbitkan token berisi informasi pengguna yang ditandatangani secara kriptografis dan tidak perlu disimpan di server disebut...",
+    o:["Session Cookie","Basic Authentication","JWT (JSON Web Token)","API Key"],
+    a:2,
+    e:"<strong>JWT (JSON Web Token)</strong> adalah standar terbuka (RFC 7519) untuk transfer klaim secara aman antar pihak. Terdiri dari tiga bagian: <em>Header</em> (algoritma), <em>Payload</em> (klaim/data), <em>Signature</em> (verifikasi integritas). Karena <em>stateless</em>, server tidak perlu menyimpan session — cocok untuk microservices dan REST API. Namun, token yang bocor sulit dicabut sebelum kedaluwarsa."
+  },
+  {
+    cat:"Sistem Terdistribusi",
+    q:"Teknologi message broker yang menggunakan model publish-subscribe dan dirancang untuk menangani aliran data (streaming) dengan throughput sangat tinggi adalah...",
+    o:["RabbitMQ","Apache Kafka","Redis Pub/Sub","ActiveMQ"],
+    a:1,
+    e:"<strong>Apache Kafka</strong> adalah platform streaming terdistribusi yang dirancang untuk throughput tinggi, latensi rendah, dan durabilitas data. Menggunakan model publish-subscribe dengan konsep <em>topic</em>, <em>partition</em>, dan <em>consumer group</em>. Data disimpan secara persisten di disk. Digunakan oleh LinkedIn, Netflix, Uber untuk real-time data pipeline. <em>RabbitMQ</em> lebih cocok untuk message queuing tradisional dengan routing kompleks."
+  },
+  {
+    cat:"Kebijakan TI Pemerintah",
+    q:"Standar nasional Indonesia untuk keamanan informasi yang merupakan adopsi dari ISO/IEC 27001 adalah...",
+    o:["SNI ISO/IEC 27001:2013","NIST SP 800-53","BSI Standard 100-2","COBIT 2019"],
+    a:0,
+    e:"<strong>SNI ISO/IEC 27001:2013</strong> adalah Standar Nasional Indonesia yang mengadopsi ISO/IEC 27001:2013 untuk Sistem Manajemen Keamanan Informasi (SMKI). Ditetapkan oleh Badan Standardisasi Nasional (BSN). Instansi pemerintah Indonesia didorong untuk menerapkan dan bahkan mendapatkan sertifikasi SNI ISO/IEC 27001 sebagai bagian dari implementasi SPBE yang aman."
+  },
+  {
+    cat:"Struktur Data Lanjut",
+    q:"Struktur data yang menggunakan fungsi hash untuk memetakan kunci ke posisi dalam array, sehingga operasi pencarian rata-rata memiliki kompleksitas O(1) disebut...",
+    o:["Linked List","Hash Table","Binary Tree","Graph"],
+    a:1,
+    e:"<strong>Hash Table (atau Hash Map)</strong> menggunakan fungsi hash untuk mengkonversi kunci menjadi indeks array tempat nilai disimpan. Dengan fungsi hash yang baik, operasi insert, delete, dan search memiliki kompleksitas rata-rata <strong>O(1)</strong>. Tantangan utama: collision (dua kunci menghasilkan hash sama), diatasi dengan chaining atau open addressing. Implementasi di Python: <code>dict</code>, di Java: <code>HashMap</code>."
+  },
+  {
+    cat:"DevOps & CI/CD",
+    q:"Strategi deployment di mana versi baru aplikasi di-deploy ke sebagian kecil server/pengguna terlebih dahulu untuk memvalidasi sebelum di-rollout ke seluruh sistem disebut...",
+    o:["Blue-Green Deployment","Rolling Deployment","Canary Deployment","Recreate Deployment"],
+    a:2,
+    e:"<strong>Canary Deployment</strong> merilis versi baru ke sebagian kecil pengguna (misal 5%) sembari memantau metrik (error rate, latency). Jika aman, persentase dinaikkan bertahap. Jika ada masalah, rollback hanya memengaruhi sebagian kecil pengguna. <em>Blue-Green</em>: dua environment identik, switch traffic sekaligus; <em>Rolling</em>: ganti instance satu per satu; <em>Recreate</em>: matikan semua instance lama lalu deploy baru (ada downtime)."
+  },
+  {
+    cat:"Microservices",
+    q:"Pola komunikasi microservices di mana service pengirim tidak perlu menunggu respons dari service penerima, menggunakan message queue sebagai perantara, disebut...",
+    o:["Synchronous REST","GraphQL","Asynchronous Messaging","gRPC"],
+    a:2,
+    e:"<strong>Asynchronous Messaging</strong> memungkinkan service berkomunikasi melalui message broker (Kafka, RabbitMQ) tanpa perlu menunggu respons langsung — service pengirim lanjut bekerja setelah menaruh pesan di antrian. Ini meningkatkan <em>loose coupling</em> dan ketahanan sistem (jika penerima down, pesan tetap tersimpan di queue). Cocok untuk event-driven architecture dan proses yang tidak perlu respons instan."
+  },
+  {
+    cat:"IPv6 & Routing",
+    q:"Mekanisme transisi IPv4 ke IPv6 yang mengemas paket IPv6 di dalam paket IPv4 sehingga dapat dikirimkan melalui jaringan IPv4 disebut...",
+    o:["Dual Stack","NAT64","Tunneling (6in4/6to4)","Proxying"],
+    a:2,
+    e:"<strong>Tunneling</strong> (seperti 6in4 atau 6to4) mengenkapsulasi paket IPv6 di dalam header IPv4 untuk transit melalui infrastruktur IPv4. Mekanisme transisi lainnya: <em>Dual Stack</em> = perangkat berjalan dengan IPv4 dan IPv6 secara bersamaan (paling umum); <em>NAT64</em> = menerjemahkan komunikasi antara host IPv6-only dan server IPv4. Dual Stack adalah metode yang paling direkomendasikan."
+  },
+  {
+    cat:"Keamanan Aplikasi",
+    q:"Daftar kerentanan keamanan aplikasi web paling kritis yang dikeluarkan secara berkala oleh OWASP dan menjadi referensi standar industri disebut...",
+    o:["CVE Database","OWASP Top 10","CWE List","NIST NVD"],
+    a:1,
+    e:"<strong>OWASP Top 10</strong> adalah daftar 10 risiko keamanan aplikasi web paling kritis yang diperbarui secara berkala oleh Open Web Application Security Project. Versi 2021 mencakup: Broken Access Control, Cryptographic Failures, Injection, Insecure Design, Security Misconfiguration, Vulnerable Components, Authentication Failures, Software Integrity Failures, Logging Failures, dan SSRF. Menjadi standar de-facto dalam pengembangan aplikasi web yang aman."
+  },
+  {
+    cat:"Sistem Terdistribusi",
+    q:"Konsep dalam sistem terdistribusi di mana semua node memiliki salinan data yang sama pada satu titik waktu, tanpa satu pun yang memiliki versi berbeda disebut...",
+    o:["Eventual Consistency","Strong Consistency","BASE","Partition Tolerance"],
+    a:1,
+    e:"<strong>Strong Consistency</strong> (atau linearizability) menjamin bahwa semua operasi baca akan selalu mengembalikan nilai terbaru yang ditulis. Semua node melihat data yang sama secara bersamaan. Berbanding terbalik dengan <em>Eventual Consistency</em> (BASE) di mana data akhirnya akan konsisten tapi mungkin ada jeda. Strong consistency lebih aman tapi mengorbankan availability dan performa (harus sinkronisasi antar node)."
+  },
+  {
+    cat:"Docker & Kubernetes",
+    q:"Dalam Docker, file teks yang berisi instruksi untuk membangun sebuah image secara otomatis layer demi layer disebut...",
+    o:["docker-compose.yml","Dockerfile","kubernetes.yaml","Makefile"],
+    a:1,
+    e:"<strong>Dockerfile</strong> adalah file teks berisi serangkaian instruksi untuk membangun Docker image secara otomatis. Instruksi umum: <code>FROM</code> (base image), <code>RUN</code> (jalankan perintah), <code>COPY</code> (salin file), <code>WORKDIR</code> (set direktori kerja), <code>EXPOSE</code> (buka port), <code>CMD</code> (perintah default saat container dijalankan). Setiap instruksi menciptakan layer baru pada image."
+  },
+  {
+    cat:"Kebijakan TI Pemerintah",
+    q:"Badan Siber dan Sandi Negara (BSSN) dibentuk berdasarkan peraturan presiden dengan tugas utama melaksanakan keamanan siber nasional. BSSN merupakan penggabungan dari...",
+    o:["Lembaga Sandi Negara dan Ditjen Aptika Kominfo","Lembaga Sandi Negara dan Indonesia Security Incident Response Team on Internet Infrastructure (ID-SIRTII)","Kominfo dan BPPT","BIN dan Polri Siber"],
+    a:1,
+    e:"<strong>BSSN (Badan Siber dan Sandi Negara)</strong> dibentuk melalui Perpres No. 28 Tahun 2021 sebagai hasil penggabungan <strong>Lembaga Sandi Negara (Lemsaneg)</strong> dan fungsi keamanan siber dari <strong>ID-SIRTII/CC</strong> (Indonesia Security Incident Response Team on Internet Infrastructure/Coordination Center) yang sebelumnya di bawah Kominfo. BSSN bertugas mengkoordinasikan keamanan siber nasional dan perlindungan infrastruktur kritis."
+  },
+  {
+    cat:"Struktur Data Lanjut",
+    q:"Algoritma graf yang digunakan untuk mencari jalur terpendek dari satu simpul sumber ke semua simpul lainnya dalam graf berbobot non-negatif adalah...",
+    o:["DFS (Depth First Search)","BFS (Breadth First Search)","Dijkstra","Bellman-Ford"],
+    a:2,
+    e:"<strong>Dijkstra</strong> adalah algoritma greedy untuk mencari jalur terpendek dari satu sumber ke semua simpul dalam graf berbobot dengan bobot non-negatif. Kompleksitas: O((V+E) log V) dengan priority queue. <em>Bellman-Ford</em> dapat menangani bobot negatif tapi lebih lambat O(VE); <em>BFS</em> untuk jalur terpendek di graf tidak berbobot; <em>DFS</em> untuk traversal dan deteksi siklus."
+  },
+  {
+    cat:"DevOps & CI/CD",
+    q:"Praktik yang memantau performa, ketersediaan, dan kesehatan sistem secara real-time menggunakan metrik, log, dan tracing disebut...",
+    o:["Load Balancing","Auto Scaling","Observability / Monitoring","Service Discovery"],
+    a:2,
+    e:"<strong>Observability</strong> dalam sistem modern dibangun dari tiga pilar: <em>Metrics</em> (angka performa — CPU, latency, error rate), <em>Logs</em> (catatan kejadian), dan <em>Traces</em> (penelusuran request lintas service). Tools populer: Prometheus + Grafana (metrics), ELK Stack (logging), Jaeger/Zipkin (tracing). Observability yang baik memungkinkan deteksi dan diagnosis masalah produksi secara cepat."
+  },
+  {
+    cat:"Microservices",
+    q:"Pola desain microservices yang menggunakan satu database per layanan untuk memastikan loose coupling antar service disebut...",
+    o:["Shared Database Pattern","Database per Service","CQRS","Saga Pattern"],
+    a:1,
+    e:"<strong>Database per Service</strong> adalah prinsip inti microservices — setiap service memiliki database sendiri (bisa berbeda teknologi: MySQL, MongoDB, Redis) sehingga service dapat di-deploy, di-scale, dan di-develop secara independen. Konsekuensinya, query yang membutuhkan data dari beberapa service harus menggunakan <em>API Composition</em> atau <em>CQRS/Event Sourcing</em>, karena tidak bisa JOIN langsung antar database."
+  },
+  {
+    cat:"IPv6 & Routing",
+    q:"Protokol routing dinamis yang paling umum digunakan pada jaringan enterprise besar dan internet (antar ISP) karena kemampuannya menangani skala sangat besar adalah...",
+    o:["RIP (Routing Information Protocol)","OSPF (Open Shortest Path First)","BGP (Border Gateway Protocol)","EIGRP"],
+    a:2,
+    e:"<strong>BGP (Border Gateway Protocol)</strong> adalah protokol routing eksterior (EGP) yang menjadi 'perekat internet' — menghubungkan ribuan Autonomous System (AS) di seluruh dunia. BGP membuat keputusan routing berdasarkan path, kebijakan jaringan, dan aturan yang dikonfigurasi. <em>OSPF</em> dan <em>EIGRP</em> adalah interior gateway protocol (IGP) untuk dalam satu AS; <em>RIP</em> sudah jarang digunakan karena lambat konvergen."
+  },
+  {
+    cat:"Keamanan Aplikasi",
+    q:"Teknik pemrograman defensif yang memvalidasi bahwa ukuran data yang ditulis ke buffer tidak melebihi kapasitasnya untuk mencegah serangan buffer overflow adalah...",
+    o:["Input Sanitization","Bounds Checking","Memory Encryption","Stack Canary"],
+    a:1,
+    e:"<strong>Bounds Checking</strong> memverifikasi bahwa indeks atau ukuran data tidak melampaui batas buffer yang dialokasikan sebelum operasi tulis dilakukan. Ini adalah pencegahan utama buffer overflow. Mekanisme lain: <em>Stack Canary</em> (nilai sentinel di stack yang dideteksi jika tertimpa), <em>ASLR</em> (Address Space Layout Randomization), dan <em>DEP/NX</em> (Data Execution Prevention). Buffer overflow merupakan salah satu kerentanan paling berbahaya dalam pemrograman C/C++."
+  },
+  {
+    cat:"Sistem Terdistribusi",
+    q:"Proses otomatis yang mendeteksi lokasi dan alamat service yang tersedia dalam jaringan microservices sehingga service dapat saling menemukan tanpa konfigurasi hardcoded disebut...",
+    o:["Load Balancing","Health Check","Service Discovery","Circuit Breaker"],
+    a:2,
+    e:"<strong>Service Discovery</strong> adalah mekanisme di mana service secara dinamis mendaftarkan diri dan menemukan service lain tanpa perlu IP/port yang di-hardcode. Ada dua model: <em>Client-side discovery</em> (client query registry, contoh: Eureka) dan <em>Server-side discovery</em> (load balancer query registry, contoh: AWS ALB). Tools: Consul, Eureka, etcd, ZooKeeper. Sangat penting dalam environment containerisasi di mana IP berubah-ubah."
+  },
+  {
+    cat:"Kebijakan TI Pemerintah",
+    q:"Peraturan yang mengatur kewajiban perlindungan data pribadi warga negara Indonesia, termasuk oleh instansi pemerintah, adalah...",
+    o:["UU No. 27 Tahun 2022 tentang Perlindungan Data Pribadi","UU No. 11 Tahun 2008 tentang ITE","PP No. 71 Tahun 2019 tentang PSTE","Perpres No. 95 Tahun 2018 tentang SPBE"],
+    a:0,
+    e:"<strong>UU No. 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP)</strong> adalah regulasi komprehensif pertama Indonesia yang secara khusus mengatur perlindungan data pribadi. UU ini mengatur hak subjek data, kewajiban pengendali dan prosesor data, transfer data lintas batas, serta sanksi pelanggaran. Berlaku penuh setelah masa transisi 2 tahun. Mirip dengan GDPR di Eropa."
+  },
+  {
+    cat:"Struktur Data Lanjut",
+    q:"Dalam struktur data graf, algoritma yang digunakan untuk menemukan Minimum Spanning Tree (MST) dengan cara selalu memilih edge berbobot terkecil yang tidak membentuk siklus adalah...",
+    o:["Prim's Algorithm","Kruskal's Algorithm","Floyd-Warshall","Topological Sort"],
+    a:1,
+    e:"<strong>Kruskal's Algorithm</strong> menemukan MST dengan pendekatan greedy: urutkan semua edge berdasarkan bobot, lalu tambahkan edge terkecil yang tidak menciptakan siklus (menggunakan Union-Find). Kompleksitas: O(E log E). <em>Prim's Algorithm</em> juga mencari MST tapi dimulai dari satu node dan selalu menambahkan edge termurah ke node yang belum dikunjungi. <em>Floyd-Warshall</em> untuk all-pairs shortest path."
+  },
+  {
+    cat:"Docker & Kubernetes",
+    q:"Objek Kubernetes yang memastikan jumlah replika Pod yang ditentukan selalu berjalan dan otomatis membuat pod baru jika ada yang gagal disebut...",
+    o:["Service","ConfigMap","ReplicaSet","Ingress"],
+    a:2,
+    e:"<strong>ReplicaSet</strong> menjamin bahwa jumlah pod yang ditentukan (<em>desired replicas</em>) selalu berjalan di cluster. Jika pod gagal, ReplicaSet otomatis membuat pengganti. Dalam praktik modern, <em>Deployment</em> (yang mengelola ReplicaSet) lebih sering digunakan karena mendukung rolling update dan rollback. <em>Service</em> = ekspos pod ke jaringan; <em>ConfigMap</em> = menyimpan konfigurasi; <em>Ingress</em> = routing HTTP/HTTPS dari luar cluster."
+  },
+  {
+    cat:"DevOps & CI/CD",
+    q:"Metrik DevOps yang mengukur seberapa sering tim melakukan deployment ke lingkungan produksi disebut...",
+    o:["Mean Time to Recovery (MTTR)","Change Failure Rate","Deployment Frequency","Lead Time for Changes"],
+    a:2,
+    e:"<strong>Deployment Frequency</strong> adalah salah satu dari empat metrik DORA (DevOps Research and Assessment) — mengukur seberapa sering organisasi berhasil merilis ke produksi. Tim elite dapat deploy beberapa kali per hari. Empat metrik DORA: <em>Deployment Frequency</em>, <em>Lead Time for Changes</em> (waktu dari commit ke produksi), <em>Change Failure Rate</em> (persentase deploy yang menyebabkan masalah), dan <em>MTTR</em> (waktu pemulihan dari insiden)."
+  }
+];
+
+
+// ===== STATE =====
+const SESSION_KEY = 'sesi-3';
+let cur = 0, ok = 0, no = 0, expVis = false;
+let answered = [];
+
+// ===== THEME =====
+function toggleDark() {
+  document.body.classList.toggle('dark');
+  const d = document.body.classList.contains('dark');
+  document.getElementById('theme-icon').className = d ? 'fas fa-sun' : 'fas fa-moon';
+  localStorage.setItem('cpns-theme', d?'dark':'light');
+}
+(function initTheme() {
+  if (localStorage.getItem('cpns-theme') === 'dark') {
+    document.body.classList.add('dark');
+    document.getElementById('theme-icon').className = 'fas fa-sun';
+  }
+  const p = JSON.parse(localStorage.getItem('cpns-profile') || '{"name":"U"}');
+  const ini = p.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'U';
+  document.getElementById('profile-mini').textContent = ini;
+  document.getElementById('profile-mini').title = p.name;
+})();
+
+// ===== QUIZ LOGIC =====
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  render();
+}
+
+
+let timerInterval;
+let timeLeft = 30 * 60;
+let sessionFinished = false;
+
+function startTimer() {
+  clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    if (sessionFinished) return;
+    timeLeft--;
+    updateTimerDisplay();
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      alert('Waktu pengerjaan sesi telah habis.');
+      showResult(true);
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+  const sec = String(timeLeft % 60).padStart(2, '0');
+  document.getElementById('timer').textContent = `${min}:${sec}`;
+}
+
+function stopSession() {
+  const confirmStop = confirm('Yakin ingin berhenti mengerjakan sesi ini? Nilai akan langsung disimpan ke riwayat.');
+  if (confirmStop) {
+    showResult(true);
+  }
+}
+
+function render() {
+  expVis = false;
+  const q = Q[cur];
+  document.getElementById('s-cur').textContent = cur+1;
+  document.getElementById('s-ok').textContent = ok;
+  document.getElementById('s-no').textContent = no;
+  document.getElementById('s-rem').textContent = Q.length - cur;
+  document.getElementById('prog').style.width = ((cur/Q.length)*100)+'%';
+  document.getElementById('sess-label').innerHTML = 
+    'Sesi <strong>3</strong> &bull; Soal <strong>'+(cur+1)+'</strong> dari <strong>'+Q.length+'</strong>';
+
+  const optHtml = q.o.map((o,i) => `
+    <button class="opt" id="opt-${i}" onclick="pick(${i})">
+      <span class="opt-key">${String.fromCharCode(65+i)}</span>
+      <span>${o}</span>
+    </button>`).join('');
+
+  document.getElementById('qarea').innerHTML = `
+    <div class="question-card">
+      <div class="q-meta">
+        <span class="q-num">SOAL ${cur+1} / ${Q.length}</span>
+        <span class="q-topic">${q.cat}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">${optHtml}</div>
+      <div class="explanation" id="exp">
+        <div class="exp-title">📖 Pembahasan</div>
+        <div class="exp-text">${q.e}</div>
+      </div>
+    </div>`;
+
+  document.getElementById('btn-nx').disabled = true;
+  document.getElementById('btn-exp').style.display = 'none';
+  document.getElementById('btn-exp').innerHTML = '<i class="fas fa-lightbulb" style="margin-right:6px"></i>Pembahasan';
+}
+
+function pick(idx) {
+  const q = Q[cur];
+  document.querySelectorAll('.opt').forEach(o => o.disabled = true);
+  const isOk = idx === q.a;
+  document.querySelectorAll('.opt')[idx].classList.add(isOk ? 'correct' : 'wrong');
+  document.querySelectorAll('.opt')[q.a].classList.add('correct');
+  if (isOk) ok++; else no++;
+  answered.push({qi:cur, sel:idx, ok:isOk});
+  document.getElementById('s-ok').textContent = ok;
+  document.getElementById('s-no').textContent = no;
+  document.getElementById('btn-nx').disabled = false;
+  document.getElementById('btn-exp').style.display = 'inline-flex';
+  document.getElementById('exp').classList.add('show');
+  document.getElementById('btn-exp').innerHTML = '<i class="fas fa-eye-slash" style="margin-right:6px"></i>Sembunyikan';
+  expVis = true;
+}
+
+function toggleExp() {
+  expVis = !expVis;
+  document.getElementById('exp').classList.toggle('show', expVis);
+  document.getElementById('btn-exp').innerHTML = expVis
+    ? '<i class="fas fa-eye-slash" style="margin-right:6px"></i>Sembunyikan'
+    : '<i class="fas fa-lightbulb" style="margin-right:6px"></i>Pembahasan';
+}
+
+function nextQ() {
+  cur++;
+  if (cur >= Q.length) showResult(); else render();
+}
+
+function showResult(forceStop = false) {
+  if (sessionFinished) return;
+  sessionFinished = true;
+  clearInterval(timerInterval);
+  document.getElementById('quiz').style.display = 'none';
+  const res = document.getElementById('result');
+  res.classList.add('show');
+  const pct = Math.round((ok/Q.length)*100);
+  const score = ok * 5;
+  document.getElementById('score-pct').textContent = pct+'%';
+  document.getElementById('r-ok').textContent = ok;
+  document.getElementById('r-no').textContent = no;
+  document.getElementById('r-sc').textContent = score;
+  document.getElementById('r-ans').textContent = answered.length + '/' + Q.length;
+  document.getElementById('score-circle').style.setProperty('--deg', Math.round((pct/100)*360)+'deg');
+  const title = pct>=80 ? '🏆 Luar Biasa!' : pct>=60 ? '👍 Cukup Baik' : '📚 Perlu Belajar Lagi';
+  const sub = forceStop ? `Sesi dihentikan pada soal ke-${answered.length}. Anda menjawab ${answered.length} dari ${Q.length} soal dengan skor ${score}. Nilai telah masuk ke riwayat.` : (pct>=80 ? 'Nilai Anda sangat baik. Siap menghadapi ujian CPNS!' : pct>=60 ? 'Di atas rata-rata. Terus tingkatkan pemahaman Anda.' : 'Pelajari kembali materi yang masih lemah dan coba lagi!');
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent = sub;
+
+  // Save score
+  const scores = JSON.parse(localStorage.getItem('cpns-scores')||'{}');
+  scores[SESSION_KEY] = { pct, score, correct:ok, wrong:no, date:new Date().toISOString() };
+  localStorage.setItem('cpns-scores', JSON.stringify(scores));
+
+  // Review
+  document.getElementById('revlist').innerHTML = answered.map(a => `
+    <div class="rev-item">
+      <span class="rev-icon">${a.ok ? '✅' : '❌'}</span>
+      <span class="rev-num">Soal ${a.qi+1}</span>
+      <span class="rev-topic">${Q[a.qi].cat}</span>
+      <span class="rev-status ${a.ok?'ok':'no'}">${a.ok ? 'Benar' : 'Salah — Jawaban: '+String.fromCharCode(65+Q[a.qi].a)}</span>
+    </div>`).join('');
+}
+
+function restart() {
+  cur=0; ok=0; no=0; answered=[];
+  sessionFinished = false;
+  timeLeft = 30 * 60;
+  startTimer();
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('quiz').style.display = 'block';
+  render();
+}
+
+startTimer();
+</script>
+</body>
+</html>

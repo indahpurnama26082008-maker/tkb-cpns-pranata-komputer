@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TKB CPNS – Pranata Komputer Sesi 2 — Pengembangan &amp; Regulasi</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+
+<link href="tkb-cpns-pranata-komputer-2.css" rel="stylesheet"/></head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+<a class="nav-back" href="index.html">
+<i class="fas fa-arrow-left"></i> Dashboard
+  </a>
+<div class="nav-title-area">
+<div class="nav-title">⚙️ Sesi 2 — Pengembangan &amp; Regulasi</div>
+<div class="nav-subtitle">30 Soal · Web, Kriptografi, SPBE, NoSQL, Mobile &amp; Metodologi</div>
+</div>
+<div class="nav-right">
+<div class="timer-box"><i class="fas fa-clock"></i><span id="timer">30:00</span></div>
+<button class="theme-btn" id="theme-btn" onclick="toggleDark()" title="Ganti tema">
+<i class="fas fa-moon" id="theme-icon"></i>
+</button>
+<div class="profile-mini" id="profile-mini" title="Profil">U</div>
+</div>
+</nav>
+<!-- BREADCRUMB -->
+<div class="breadcrumb-bar">
+<i class="fas fa-home" style="font-size:.8rem"></i>
+<a class="bc-link" href="index.html">Dashboard</a>
+<span style="opacity:.4">›</span>
+<span style="color:var(--text);font-weight:600">Sesi 2 — Pengembangan &amp; Regulasi</span>
+</div>
+<div class="wrapper">
+<!-- INTRO -->
+<div id="intro">
+<div class="intro-card">
+<div class="intro-icon-wrap" style="background:linear-gradient(135deg,#06b6d4,#67e8f9)">⚙️</div>
+<div class="intro-title">Sesi 2 — Pengembangan &amp; Regulasi</div>
+<p class="intro-desc">Paket soal kedua berfokus pada pengembangan software dan regulasi pemerintah: REST API, kriptografi modern, Perpres SPBE, database NoSQL, pengembangan mobile, metodologi Agile/Scrum, dan testing.</p>
+<div class="intro-meta">
+<div class="meta-pill"><i class="fas fa-question-circle"></i> 30 Soal</div>
+<div class="meta-pill"><i class="fas fa-tags"></i> 8 Topik</div>
+<div class="meta-pill"><i class="fas fa-star"></i> Skor Maks: 150</div>
+</div>
+<div class="topics-wrap">
+<span class="topic-tag">🌐 Pemrograman Web</span><span class="topic-tag">🔑 Kriptografi</span><span class="topic-tag">📜 Regulasi SPBE</span><span class="topic-tag">🗃️ Basis Data Lanjut</span><span class="topic-tag">📱 Mobile Development</span><span class="topic-tag">🔗 Jaringan Lanjut</span><span class="topic-tag">🧪 Testing &amp; QA</span><span class="topic-tag">📋 Manajemen Proyek</span>
+</div>
+<button class="btn-start-quiz" onclick="startQuiz()">
+<i class="fas fa-play" style="margin-right:8px"></i>Mulai Ujian
+      </button>
+</div>
+</div>
+<!-- QUIZ -->
+<div id="quiz" style="display:none">
+<div class="stats-bar">
+<div class="stat"><div class="stat-val" id="s-cur">1</div><div class="stat-lbl">Soal ke</div></div>
+<div class="stat"><div class="stat-val g" id="s-ok">0</div><div class="stat-lbl">Benar</div></div>
+<div class="stat"><div class="stat-val r" id="s-no">0</div><div class="stat-lbl">Salah</div></div>
+<div class="stat"><div class="stat-val m" id="s-rem">30</div><div class="stat-lbl">Sisa</div></div>
+</div>
+<div class="prog-wrap"><div class="prog-bar" id="prog" style="width:0%"></div></div>
+<div class="session-label" id="sess-label"></div>
+<div id="qarea"></div>
+<div class="actions">
+<button class="btn btn-secondary" id="btn-exp" onclick="toggleExp()" style="display:none">
+<i class="fas fa-lightbulb" style="margin-right:6px"></i>Pembahasan
+      </button>
+<button class="btn btn-secondary" id="btn-stop" onclick="stopSession()">
+<i class="fas fa-stop-circle" style="margin-right:6px"></i>Berhenti
+      </button>
+<button class="btn btn-primary" disabled="" id="btn-nx" onclick="nextQ()">
+        Berikutnya <i class="fas fa-arrow-right" style="margin-left:6px"></i>
+</button>
+</div>
+</div>
+<!-- RESULT -->
+<div class="result-screen" id="result">
+<div class="result-top">
+<div class="score-circle" id="score-circle">
+<div class="score-val" id="score-pct">0%</div>
+</div>
+<div class="result-title" id="result-title">Hasil Ujian</div>
+<div class="result-sub" id="result-sub"></div>
+<div class="result-stats">
+<div class="rstat"><div class="rstat-val" id="r-ok" style="color:var(--correct)">0</div><div class="rstat-lbl">Benar</div></div>
+<div class="rstat"><div class="rstat-val" id="r-no" style="color:var(--wrong)">0</div><div class="rstat-lbl">Salah</div></div>
+<div class="rstat"><div class="rstat-val" id="r-sc" style="color:var(--accent)">0</div><div class="rstat-lbl">Skor</div></div>
+<div class="rstat"><div class="rstat-val" id="r-ans" style="color:var(--primary)">0/0</div><div class="rstat-lbl">Terjawab</div></div>
+</div>
+<div class="result-btns">
+<button class="btn btn-secondary" onclick="restart()">
+<i class="fas fa-redo" style="margin-right:6px"></i>Ulangi
+        </button>
+<button class="btn btn-primary" onclick="document.getElementById('rev').scrollIntoView({behavior:'smooth'})">
+<i class="fas fa-list-check" style="margin-right:6px"></i>Review Jawaban
+        </button>
+<a class="btn btn-secondary" href="index.html">
+<i class="fas fa-home" style="margin-right:6px"></i>Dashboard
+        </a>
+</div>
+</div>
+<div class="review-section" id="rev">
+<div class="review-head"><i class="fas fa-clipboard-list" style="margin-right:6px"></i>Rangkuman Jawaban</div>
+<div id="revlist"></div>
+</div>
+</div>
+</div>
+<script>
+// ===== QUESTIONS =====
+const Q = [
+  {
+    cat: "Pemrograman Web",
+    q: "Dalam arsitektur REST API, HTTP method yang digunakan untuk memperbarui sebagian data (partial update) pada sebuah resource adalah...",
+    o: ["PUT", "POST", "PATCH", "DELETE"],
+    a: 2,
+    e: "<strong>PATCH</strong> digunakan untuk melakukan pembaruan sebagian (partial update) pada resource. Berbeda dengan <strong>PUT</strong> yang menggantikan seluruh resource dengan data baru. Contoh: <code>PATCH /api/users/5</code> dengan body <code>{\"email\":\"baru@mail.com\"}</code> hanya mengubah email, sedangkan PUT mengharuskan seluruh data dikirim ulang."
+  },
+  {
+    cat: "Kriptografi",
+    q: "Algoritma hashing yang menghasilkan nilai hash sepanjang 256-bit dan banyak digunakan untuk integritas data serta tanda tangan digital adalah...",
+    o: ["MD5", "SHA-1", "SHA-256", "DES"],
+    a: 2,
+    e: "<strong>SHA-256</strong> (Secure Hash Algorithm 256-bit) adalah fungsi hash kriptografi yang menghasilkan output 256 bit (64 karakter heksadesimal). MD5 (128-bit) dan SHA-1 (160-bit) sudah dianggap tidak aman karena rentan terhadap collision attack. DES bukan algoritma hashing melainkan enkripsi simetris. SHA-256 digunakan dalam Bitcoin, sertifikat SSL, dan tanda tangan digital."
+  },
+  {
+    cat: "Regulasi SPBE",
+    q: "Peraturan Presiden yang menjadi landasan hukum utama penyelenggaraan Sistem Pemerintahan Berbasis Elektronik (SPBE) di Indonesia adalah...",
+    o: ["Perpres No. 95 Tahun 2018", "Perpres No. 54 Tahun 2010", "UU No. 11 Tahun 2008", "PP No. 82 Tahun 2012"],
+    a: 0,
+    e: "<strong>Perpres No. 95 Tahun 2018</strong> tentang Sistem Pemerintahan Berbasis Elektronik (SPBE) adalah regulasi utama yang mengatur tata kelola, arsitektur, dan implementasi SPBE di seluruh instansi pemerintah pusat dan daerah. Tujuannya: mewujudkan tata kelola pemerintahan yang bersih, efektif, transparan, dan akuntabel. UU No. 11 Tahun 2008 mengatur Informasi dan Transaksi Elektronik (ITE)."
+  },
+  {
+    cat: "Basis Data Lanjut",
+    q: "Jenis basis data NoSQL yang menyimpan data dalam bentuk pasangan key-value dan sangat optimal untuk caching dan session management adalah...",
+    o: ["MongoDB", "Cassandra", "Redis", "Neo4j"],
+    a: 2,
+    e: "<strong>Redis</strong> (Remote Dictionary Server) adalah basis data NoSQL bertipe key-value store yang menyimpan data di memori (in-memory) sehingga sangat cepat. Digunakan untuk caching, session management, pub/sub messaging, dan leaderboard. MongoDB adalah document store; Cassandra adalah wide-column store; Neo4j adalah graph database."
+  },
+  {
+    cat: "Pemrograman",
+    q: "Konsep dalam pemrograman fungsional yang menyatakan bahwa fungsi yang diberikan input yang sama akan selalu menghasilkan output yang sama dan tidak memiliki efek samping disebut...",
+    o: ["Closure", "Pure Function", "Higher-Order Function", "Currying"],
+    a: 1,
+    e: "<strong>Pure Function</strong> memiliki dua sifat: (1) <em>Deterministic</em> — output selalu sama untuk input yang sama, (2) <em>No side effects</em> — tidak mengubah state luar, tidak melakukan I/O. Manfaat: mudah diuji, diprediksi, dan diparalelkan. Berbeda dengan <em>Closure</em> (fungsi yang mengakses variabel dari scope luar) dan <em>Higher-Order Function</em> (fungsi yang menerima/mengembalikan fungsi lain)."
+  },
+  {
+    cat: "Jaringan Komputer",
+    q: "Protokol yang digunakan email client untuk mengambil (mendownload) pesan dari mail server dengan kemampuan menyimpan salinan pesan di server adalah...",
+    o: ["SMTP", "POP3", "IMAP", "FTP"],
+    a: 2,
+    e: "<strong>IMAP (Internet Message Access Protocol)</strong> memungkinkan email client mengakses pesan yang tersimpan di server tanpa harus mendownloadnya secara permanen, sehingga pesan dapat diakses dari banyak perangkat. POP3 mengunduh pesan dan biasanya menghapusnya dari server. SMTP digunakan untuk mengirim email, bukan menerima. Port IMAP: 143 (biasa) / 993 (SSL)."
+  },
+  {
+    cat: "Pengujian PL",
+    q: "Jenis pengujian perangkat lunak yang menguji sistem secara menyeluruh untuk memastikan semua komponen terintegrasi dan bekerja sesuai requirement bisnis disebut...",
+    o: ["Unit Testing", "Integration Testing", "System Testing", "Regression Testing"],
+    a: 2,
+    e: "<strong>System Testing</strong> menguji sistem secara end-to-end sebagai satu kesatuan untuk memverifikasi pemenuhan kebutuhan fungsional dan non-fungsional. Urutan: Unit Test → Integration Test → System Test → UAT. <em>Unit Testing</em> = pengujian komponen terkecil (fungsi/method); <em>Integration Testing</em> = interaksi antar modul; <em>Regression Testing</em> = memastikan perubahan tidak merusak fitur lama."
+  },
+  {
+    cat: "AI & Machine Learning",
+    q: "Jenis machine learning di mana model dilatih menggunakan data yang sudah diberi label (labeled data) disebut...",
+    o: ["Unsupervised Learning", "Reinforcement Learning", "Semi-supervised Learning", "Supervised Learning"],
+    a: 3,
+    e: "<strong>Supervised Learning</strong> melatih model menggunakan dataset berlabel — setiap data input memiliki output/target yang sudah diketahui. Contoh: klasifikasi email spam (label: spam/bukan spam), prediksi harga rumah (label: harga). <em>Unsupervised Learning</em> menggunakan data tanpa label (clustering, dimensionality reduction); <em>Reinforcement Learning</em> belajar dari reward/punishment."
+  },
+  {
+    cat: "Pemrograman Web",
+    q: "Mekanisme keamanan browser yang membatasi halaman web untuk membuat request ke domain yang berbeda dari domain asalnya disebut...",
+    o: ["CORS (Cross-Origin Resource Sharing)", "Same-Origin Policy", "Content Security Policy", "CSRF Token"],
+    a: 1,
+    e: "<strong>Same-Origin Policy (SOP)</strong> adalah mekanisme keamanan browser yang membatasi dokumen atau script dari satu origin untuk berinteraksi dengan resource dari origin berbeda. Origin = protokol + domain + port. <em>CORS</em> adalah mekanisme untuk secara selektif melemahkan SOP dengan menambahkan header HTTP tertentu, memperbolehkan request lintas origin yang spesifik."
+  },
+  {
+    cat: "Basis Data Lanjut",
+    q: "Dalam basis data relasional, perintah yang digunakan untuk memulai sebuah transaksi secara eksplisit dan menyimpan semua perubahan secara permanen adalah...",
+    o: ["BEGIN; ... ROLLBACK;", "START TRANSACTION; ... COMMIT;", "OPEN; ... SAVE;", "INIT; ... APPLY;"],
+    a: 1,
+    e: "<strong>START TRANSACTION; ... COMMIT;</strong> adalah cara memulai dan menyimpan transaksi secara eksplisit. COMMIT membuat semua perubahan dalam transaksi menjadi permanen. ROLLBACK membatalkan semua perubahan sejak transaksi dimulai. Prinsip ACID: Atomicity, Consistency, Isolation, Durability — menjamin integritas transaksi basis data."
+  },
+  {
+    cat: "Kriptografi",
+    q: "Enkripsi asimetris menggunakan dua kunci yang berbeda. Saat mengirim pesan rahasia kepada seseorang, kunci manakah yang digunakan untuk mengenkripsi?",
+    o: ["Kunci privat pengirim", "Kunci publik penerima", "Kunci privat penerima", "Kunci simetris bersama"],
+    a: 1,
+    e: "Dalam enkripsi asimetris, pesan dienkripsi menggunakan <strong>kunci publik penerima</strong> dan hanya bisa didekripsi menggunakan <strong>kunci privat penerima</strong>. Kunci publik dapat dibagikan kepada siapa saja, sedangkan kunci privat dijaga kerahasiaannya. Untuk tanda tangan digital, prosesnya terbalik: pengirim menandatangani dengan kunci privatnya, dan diverifikasi menggunakan kunci publiknya."
+  },
+  {
+    cat: "Regulasi SPBE",
+    q: "Dalam arsitektur SPBE nasional, komponen yang berfungsi sebagai platform terpadu untuk integrasi layanan digital antar instansi pemerintah disebut...",
+    o: ["Government Cloud", "SRIKANDI", "Government Service Bus (GSB)", "Pusdatin"],
+    a: 2,
+    e: "<strong>Government Service Bus (GSB)</strong> atau Sistem Penghubung Layanan Pemerintah adalah komponen arsitektur SPBE yang berfungsi sebagai middleware integrasi — menghubungkan sistem informasi antar instansi pemerintah secara aman dan terstandar. Ini memungkinkan pertukaran data antar kementerian/lembaga/pemda tanpa harus membuat integrasi point-to-point."
+  },
+  {
+    cat: "Pemrograman",
+    q: "Dalam paradigma Object-Oriented Programming, kemampuan sebuah objek untuk merespons pesan yang sama dengan cara berbeda tergantung pada tipenya disebut...",
+    o: ["Inheritance", "Encapsulation", "Polymorphism", "Abstraction"],
+    a: 2,
+    e: "<strong>Polymorphism</strong> berarti 'banyak bentuk' — satu method/interface dapat memiliki implementasi berbeda di class yang berbeda. Dua jenis: (1) <em>Compile-time polymorphism</em> (method overloading), (2) <em>Runtime polymorphism</em> (method overriding). Contoh: method <code>draw()</code> pada class Circle dan Square menghasilkan gambar berbeda meski dipanggil dengan cara yang sama."
+  },
+  {
+    cat: "Pengujian PL",
+    q: "Metode pengujian perangkat lunak yang menguji fungsi sistem tanpa mengetahui struktur internal kode — hanya berdasarkan spesifikasi input dan output — disebut...",
+    o: ["White-Box Testing", "Black-Box Testing", "Gray-Box Testing", "Mutation Testing"],
+    a: 1,
+    e: "<strong>Black-Box Testing</strong> menguji fungsionalitas sistem dari perspektif pengguna tanpa melihat kode sumber — fokus pada apakah output sesuai dengan input yang diberikan. <em>White-Box Testing</em> menguji logika internal kode (path coverage, branch coverage); <em>Gray-Box Testing</em> kombinasi keduanya. Black-box cocok untuk functional testing dan UAT."
+  },
+  {
+    cat: "Jaringan Komputer",
+    q: "Teknologi yang memungkinkan beberapa VLAN berbeda berkomunikasi satu sama lain di lingkungan jaringan Layer 2 memerlukan perangkat...",
+    o: ["Hub", "Layer 2 Switch", "Layer 3 Switch / Router", "Repeater"],
+    a: 2,
+    e: "<strong>Layer 3 Switch atau Router</strong> diperlukan untuk routing antar VLAN (Inter-VLAN Routing). VLAN membagi jaringan fisik menjadi segmen logis yang terisolasi (broadcast domain berbeda), sehingga komunikasi antar VLAN membutuhkan routing di Layer 3. Tekniknya: Router-on-a-stick (menggunakan sub-interface di router) atau Layer 3 switch dengan SVI (Switched Virtual Interface)."
+  },
+  {
+    cat: "AI & Machine Learning",
+    q: "Teknik dalam deep learning yang menggunakan jaringan saraf dengan banyak lapisan tersembunyi (hidden layers) untuk belajar representasi fitur secara hierarkis disebut...",
+    o: ["Linear Regression", "Decision Tree", "Deep Neural Network", "K-Nearest Neighbor"],
+    a: 2,
+    e: "<strong>Deep Neural Network (DNN)</strong> adalah jaringan saraf tiruan dengan banyak lapisan tersembunyi yang memungkinkan model mempelajari representasi fitur bertingkat (dari sederhana ke kompleks). Digunakan dalam computer vision (CNN), NLP (RNN, Transformer), dan speech recognition. Berbeda dengan <em>Linear Regression</em> (model linier sederhana) dan <em>Decision Tree</em> (pohon keputusan berbasis aturan)."
+  },
+  {
+    cat: "Pemrograman Web",
+    q: "Format pertukaran data yang ringan dan berbasis teks, umum digunakan dalam REST API karena mudah dibaca manusia dan mesin, adalah...",
+    o: ["XML", "CSV", "JSON", "YAML"],
+    a: 2,
+    e: "<strong>JSON (JavaScript Object Notation)</strong> adalah format pertukaran data berbasis teks yang ringan, mudah dibaca, dan didukung hampir semua bahasa pemrograman. Strukturnya menggunakan pasangan key-value, array, dan objek bersarang. JSON lebih ringkas dari XML dan menjadi standar de-facto untuk REST API modern. Contoh: <code>{\"nama\":\"Budi\",\"nip\":\"198501012010011001\"}</code>"
+  },
+  {
+    cat: "Basis Data Lanjut",
+    q: "Konsep dalam basis data yang memungkinkan tabel mewarisi struktur dan data dari tabel lain, umum pada basis data PostgreSQL, disebut...",
+    o: ["Partitioning", "Sharding", "Table Inheritance", "Materialized View"],
+    a: 2,
+    e: "<strong>Table Inheritance</strong> di PostgreSQL memungkinkan tabel anak mewarisi semua kolom tabel induk, mirip konsep OOP. Query pada tabel induk secara otomatis menyertakan data dari semua tabel anak. <em>Partitioning</em> membagi satu tabel besar menjadi beberapa bagian berdasarkan kriteria tertentu; <em>Sharding</em> mendistribusikan data ke beberapa server database; <em>Materialized View</em> menyimpan hasil query secara fisik."
+  },
+  {
+    cat: "Kriptografi",
+    q: "Protokol yang digunakan untuk otentikasi terpusat pada jaringan komputer, memungkinkan single sign-on (SSO) dalam lingkungan Active Directory adalah...",
+    o: ["OAuth 2.0", "Kerberos", "RADIUS", "LDAP"],
+    a: 1,
+    e: "<strong>Kerberos</strong> adalah protokol otentikasi jaringan yang menggunakan tiket (ticket-granting ticket) untuk membuktikan identitas pengguna kepada layanan tanpa mengirimkan password melalui jaringan. Kerberos adalah fondasi autentikasi Microsoft Active Directory. <em>OAuth 2.0</em> = otorisasi berbasis token; <em>RADIUS</em> = autentikasi remote akses; <em>LDAP</em> = direktori layanan."
+  },
+  {
+    cat: "Regulasi SPBE",
+    q: "Berdasarkan Perpres No. 95 Tahun 2018, evaluasi SPBE instansi pemerintah dilakukan oleh kementerian yang bertanggung jawab di bidang...",
+    o: ["Keuangan Negara", "Pendayagunaan Aparatur Negara dan Reformasi Birokrasi", "Komunikasi dan Informatika", "Dalam Negeri"],
+    a: 1,
+    e: "Berdasarkan <strong>Perpres No. 95 Tahun 2018</strong>, evaluasi SPBE dilakukan oleh <strong>Kementerian Pendayagunaan Aparatur Negara dan Reformasi Birokrasi (KemenPAN-RB)</strong> bersama Kementerian Kominfo dan BPPT (kini BRIN). Hasil evaluasi berupa Indeks SPBE yang menjadi tolok ukur kematangan implementasi SPBE di tiap instansi pemerintah."
+  },
+  {
+    cat: "Pemrograman",
+    q: "Pola desain (design pattern) yang memastikan sebuah class hanya memiliki satu instance dan menyediakan titik akses global ke instance tersebut adalah...",
+    o: ["Factory Pattern", "Observer Pattern", "Singleton Pattern", "Decorator Pattern"],
+    a: 2,
+    e: "<strong>Singleton Pattern</strong> adalah creational design pattern yang membatasi instansiasi sebuah class hanya satu objek. Diimplementasikan dengan membuat constructor private dan menyediakan static method untuk mendapatkan instance. Contoh penggunaan: koneksi database, logger, konfigurasi aplikasi. Termasuk dalam kelompok GoF (Gang of Four) design patterns."
+  },
+  {
+    cat: "Pengujian PL",
+    q: "Pengujian yang dilakukan untuk memastikan bahwa perubahan kode (perbaikan bug atau fitur baru) tidak merusak fungsionalitas yang sebelumnya sudah berjalan dengan benar disebut...",
+    o: ["Smoke Testing", "Load Testing", "Regression Testing", "Exploratory Testing"],
+    a: 2,
+    e: "<strong>Regression Testing</strong> (Uji Regresi) memastikan bahwa kode yang baru diubah tidak menimbulkan bug baru pada fitur yang sebelumnya sudah berfungsi. Sangat penting dalam siklus pengembangan iteratif. Biasanya diotomatisasi menggunakan CI/CD pipeline. <em>Smoke Testing</em> = pengujian cepat kelayakan build; <em>Load Testing</em> = uji beban; <em>Exploratory Testing</em> = pengujian tanpa skrip."
+  },
+  {
+    cat: "Jaringan Komputer",
+    q: "Teknik jaringan yang memungkinkan satu alamat IP publik digunakan bersama oleh banyak perangkat dalam jaringan privat dengan cara menerjemahkan alamat IP adalah...",
+    o: ["VPN", "NAT (Network Address Translation)", "Proxy Server", "DHCP"],
+    a: 1,
+    e: "<strong>NAT (Network Address Translation)</strong> menerjemahkan alamat IP privat (misal 192.168.x.x) menjadi IP publik saat paket keluar ke internet, dan sebaliknya saat paket masuk. Ini menghemat penggunaan IP publik yang terbatas (IPv4). Jenis NAT: Static NAT (1:1), Dynamic NAT (pool), PAT/NAPT (many:1, menggunakan port number)."
+  },
+  {
+    cat: "AI & Machine Learning",
+    q: "Metode evaluasi model machine learning yang membagi dataset menjadi beberapa lipatan (fold) untuk melatih dan menguji model secara bergantian disebut...",
+    o: ["Train-Test Split", "K-Fold Cross Validation", "Bootstrapping", "Holdout Method"],
+    a: 1,
+    e: "<strong>K-Fold Cross Validation</strong> membagi dataset menjadi K bagian (fold). Model dilatih K kali, setiap kali menggunakan K-1 fold untuk training dan 1 fold untuk validation. Nilai metrik dirata-rata dari K iterasi untuk estimasi performa yang lebih robust dan mengurangi variance dibanding simple train-test split. K yang umum: 5 atau 10."
+  },
+  {
+    cat: "Pemrograman Web",
+    q: "Dalam pengembangan frontend, state management library yang paling umum digunakan bersama React untuk mengelola state aplikasi secara global adalah...",
+    o: ["jQuery", "Bootstrap", "Redux", "Webpack"],
+    a: 2,
+    e: "<strong>Redux</strong> adalah library state management yang mengimplementasikan pola Flux — state aplikasi disimpan dalam satu store terpusat, perubahan dilakukan melalui actions dan reducers (pure functions). Memudahkan debugging dan prediktabilitas state di aplikasi React yang kompleks. Alternatif modern: Zustand, Recoil, Jotai. <em>jQuery</em> = manipulasi DOM; <em>Bootstrap</em> = CSS framework; <em>Webpack</em> = module bundler."
+  },
+  {
+    cat: "Basis Data Lanjut",
+    q: "Properti basis data yang memastikan data tetap konsisten dan valid bahkan ketika terjadi kegagalan sistem di tengah transaksi disebut sifat...",
+    o: ["Atomicity", "Consistency", "Isolation", "Durability"],
+    a: 0,
+    e: "<strong>Atomicity</strong> adalah sifat ACID yang memastikan setiap transaksi diperlakukan sebagai satu unit yang tidak dapat dipecah — semua operasi berhasil (commit) atau semua dibatalkan (rollback). Jika server mati di tengah transaksi transfer uang (debet berhasil tapi kredit belum), Atomicity memastikan debet juga dibatalkan sehingga data tetap konsisten."
+  },
+  {
+    cat: "Pemrograman",
+    q: "Dalam pemrograman Python, tipe data yang bersifat immutable (tidak dapat diubah setelah dibuat) dan direpresentasikan dengan tanda kurung () adalah...",
+    o: ["List", "Dictionary", "Set", "Tuple"],
+    a: 3,
+    e: "<strong>Tuple</strong> adalah tipe data Python yang immutable — isinya tidak dapat diubah setelah dideklarasikan. Ditulis dengan tanda kurung: <code>(1, 2, 3)</code>. Keunggulan: lebih cepat dari list, dapat digunakan sebagai kunci dictionary, dan melindungi data dari perubahan tidak disengaja. <em>List</em> = mutable, tanda []; <em>Dictionary</em> = key-value, tanda {}; <em>Set</em> = unik, mutable."
+  },
+  {
+    cat: "Pengujian PL",
+    q: "Metode pengujian performa yang mensimulasikan banyak pengguna mengakses sistem secara bersamaan untuk mengetahui batas kemampuan sistem disebut...",
+    o: ["Stress Testing", "Unit Testing", "Usability Testing", "Security Testing"],
+    a: 0,
+    e: "<strong>Stress Testing</strong> menguji sistem di luar batas normal untuk menemukan titik kegagalan (breaking point) — berapa banyak pengguna/beban yang dapat ditangani sebelum sistem crash atau performa menurun drastis. Berbeda dengan <em>Load Testing</em> yang menguji pada beban normal/ekspektasi. Tools: Apache JMeter, Locust, Gatling. Hasilnya digunakan untuk capacity planning."
+  },
+  {
+    cat: "Regulasi SPBE",
+    q: "Aplikasi manajemen persuratan dan naskah dinas elektronik yang dikembangkan oleh pemerintah Indonesia untuk digunakan oleh seluruh instansi pemerintah adalah...",
+    o: ["SIPD", "SRIKANDI", "e-Procurement", "SIASN"],
+    a: 1,
+    e: "<strong>SRIKANDI (Sistem Informasi Kearsipan Dinamis Terintegrasi)</strong> adalah aplikasi persuratan dan kearsipan resmi pemerintah Indonesia yang dikembangkan oleh ANRI (Arsip Nasional RI), Kementerian Kominfo, KemenPAN-RB, dan BSSN. Wajib digunakan oleh instansi pemerintah pusat dan daerah untuk naskah dinas elektronik sesuai kebijakan SPBE."
+  },
+  {
+    cat: "Jaringan Komputer",
+    q: "Standar keamanan jaringan nirkabel (WiFi) yang saat ini paling kuat dan merupakan pengganti WPA2 dengan dukungan enkripsi SAE (Simultaneous Authentication of Equals) adalah...",
+    o: ["WEP", "WPA", "WPA2", "WPA3"],
+    a: 3,
+    e: "<strong>WPA3</strong> (Wi-Fi Protected Access 3) adalah standar keamanan WiFi terbaru yang diperkenalkan pada 2018. Keunggulan dibanding WPA2: menggunakan SAE menggantikan PSK (lebih tahan brute force), mendukung Forward Secrecy, enkripsi 192-bit untuk enterprise, dan melindungi dari serangan dictionary attack pada jaringan publik. WEP sudah sangat tidak aman dan harus dihindari."
+  },
+  {
+    cat: "AI & Machine Learning",
+    q: "Kemampuan sistem AI untuk memahami, menginterpretasikan, dan menghasilkan bahasa manusia secara alami dalam berbagai tugas seperti terjemahan, ringkasan, dan tanya jawab disebut...",
+    o: ["Computer Vision", "Natural Language Processing (NLP)", "Robotics Process Automation", "Expert System"],
+    a: 1,
+    e: "<strong>Natural Language Processing (NLP)</strong> adalah cabang AI yang berfokus pada interaksi antara komputer dan bahasa manusia. Tugas NLP: klasifikasi teks, analisis sentimen, machine translation, summarization, chatbot, dan named entity recognition. Model modern seperti GPT dan BERT menggunakan arsitektur Transformer yang merevolusi kemampuan NLP secara drastis."
+  }
+];
+
+
+// ===== STATE =====
+const SESSION_KEY = 'sesi-2';
+let cur = 0, ok = 0, no = 0, expVis = false;
+let answered = [];
+
+// ===== THEME =====
+function toggleDark() {
+  document.body.classList.toggle('dark');
+  const d = document.body.classList.contains('dark');
+  document.getElementById('theme-icon').className = d ? 'fas fa-sun' : 'fas fa-moon';
+  localStorage.setItem('cpns-theme', d?'dark':'light');
+}
+(function initTheme() {
+  if (localStorage.getItem('cpns-theme') === 'dark') {
+    document.body.classList.add('dark');
+    document.getElementById('theme-icon').className = 'fas fa-sun';
+  }
+  const p = JSON.parse(localStorage.getItem('cpns-profile') || '{"name":"U"}');
+  const ini = p.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'U';
+  document.getElementById('profile-mini').textContent = ini;
+  document.getElementById('profile-mini').title = p.name;
+})();
+
+// ===== QUIZ LOGIC =====
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  render();
+}
+
+
+let timerInterval;
+let timeLeft = 30 * 60;
+let sessionFinished = false;
+
+function startTimer() {
+  clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    if (sessionFinished) return;
+    timeLeft--;
+    updateTimerDisplay();
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      alert('Waktu pengerjaan sesi telah habis.');
+      showResult(true);
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+  const sec = String(timeLeft % 60).padStart(2, '0');
+  document.getElementById('timer').textContent = `${min}:${sec}`;
+}
+
+function stopSession() {
+  const confirmStop = confirm('Yakin ingin berhenti mengerjakan sesi ini? Nilai akan langsung disimpan ke riwayat.');
+  if (confirmStop) {
+    showResult(true);
+  }
+}
+
+function render() {
+  expVis = false;
+  const q = Q[cur];
+  document.getElementById('s-cur').textContent = cur+1;
+  document.getElementById('s-ok').textContent = ok;
+  document.getElementById('s-no').textContent = no;
+  document.getElementById('s-rem').textContent = Q.length - cur;
+  document.getElementById('prog').style.width = ((cur/Q.length)*100)+'%';
+  document.getElementById('sess-label').innerHTML = 
+    'Sesi <strong>2</strong> &bull; Soal <strong>'+(cur+1)+'</strong> dari <strong>'+Q.length+'</strong>';
+
+  const optHtml = q.o.map((o,i) => `
+    <button class="opt" id="opt-${i}" onclick="pick(${i})">
+      <span class="opt-key">${String.fromCharCode(65+i)}</span>
+      <span>${o}</span>
+    </button>`).join('');
+
+  document.getElementById('qarea').innerHTML = `
+    <div class="question-card">
+      <div class="q-meta">
+        <span class="q-num">SOAL ${cur+1} / ${Q.length}</span>
+        <span class="q-topic">${q.cat}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">${optHtml}</div>
+      <div class="explanation" id="exp">
+        <div class="exp-title">📖 Pembahasan</div>
+        <div class="exp-text">${q.e}</div>
+      </div>
+    </div>`;
+
+  document.getElementById('btn-nx').disabled = true;
+  document.getElementById('btn-exp').style.display = 'none';
+  document.getElementById('btn-exp').innerHTML = '<i class="fas fa-lightbulb" style="margin-right:6px"></i>Pembahasan';
+}
+
+function pick(idx) {
+  const q = Q[cur];
+  document.querySelectorAll('.opt').forEach(o => o.disabled = true);
+  const isOk = idx === q.a;
+  document.querySelectorAll('.opt')[idx].classList.add(isOk ? 'correct' : 'wrong');
+  document.querySelectorAll('.opt')[q.a].classList.add('correct');
+  if (isOk) ok++; else no++;
+  answered.push({qi:cur, sel:idx, ok:isOk});
+  document.getElementById('s-ok').textContent = ok;
+  document.getElementById('s-no').textContent = no;
+  document.getElementById('btn-nx').disabled = false;
+  document.getElementById('btn-exp').style.display = 'inline-flex';
+  document.getElementById('exp').classList.add('show');
+  document.getElementById('btn-exp').innerHTML = '<i class="fas fa-eye-slash" style="margin-right:6px"></i>Sembunyikan';
+  expVis = true;
+}
+
+function toggleExp() {
+  expVis = !expVis;
+  document.getElementById('exp').classList.toggle('show', expVis);
+  document.getElementById('btn-exp').innerHTML = expVis
+    ? '<i class="fas fa-eye-slash" style="margin-right:6px"></i>Sembunyikan'
+    : '<i class="fas fa-lightbulb" style="margin-right:6px"></i>Pembahasan';
+}
+
+function nextQ() {
+  cur++;
+  if (cur >= Q.length) showResult(); else render();
+}
+
+function showResult(forceStop = false) {
+  if (sessionFinished) return;
+  sessionFinished = true;
+  clearInterval(timerInterval);
+  document.getElementById('quiz').style.display = 'none';
+  const res = document.getElementById('result');
+  res.classList.add('show');
+  const pct = Math.round((ok/Q.length)*100);
+  const score = ok * 5;
+  document.getElementById('score-pct').textContent = pct+'%';
+  document.getElementById('r-ok').textContent = ok;
+  document.getElementById('r-no').textContent = no;
+  document.getElementById('r-sc').textContent = score;
+  document.getElementById('r-ans').textContent = answered.length + '/' + Q.length;
+  document.getElementById('score-circle').style.setProperty('--deg', Math.round((pct/100)*360)+'deg');
+  const title = pct>=80 ? '🏆 Luar Biasa!' : pct>=60 ? '👍 Cukup Baik' : '📚 Perlu Belajar Lagi';
+  const sub = forceStop ? `Sesi dihentikan pada soal ke-${answered.length}. Anda menjawab ${answered.length} dari ${Q.length} soal dengan skor ${score}. Nilai telah masuk ke riwayat.` : (pct>=80 ? 'Nilai Anda sangat baik. Siap menghadapi ujian CPNS!' : pct>=60 ? 'Di atas rata-rata. Terus tingkatkan pemahaman Anda.' : 'Pelajari kembali materi yang masih lemah dan coba lagi!');
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent = sub;
+
+  // Save score
+  const scores = JSON.parse(localStorage.getItem('cpns-scores')||'{}');
+  scores[SESSION_KEY] = { pct, score, correct:ok, wrong:no, date:new Date().toISOString() };
+  localStorage.setItem('cpns-scores', JSON.stringify(scores));
+
+  // Review
+  document.getElementById('revlist').innerHTML = answered.map(a => `
+    <div class="rev-item">
+      <span class="rev-icon">${a.ok ? '✅' : '❌'}</span>
+      <span class="rev-num">Soal ${a.qi+1}</span>
+      <span class="rev-topic">${Q[a.qi].cat}</span>
+      <span class="rev-status ${a.ok?'ok':'no'}">${a.ok ? 'Benar' : 'Salah — Jawaban: '+String.fromCharCode(65+Q[a.qi].a)}</span>
+    </div>`).join('');
+}
+
+function restart() {
+  cur=0; ok=0; no=0; answered=[];
+  sessionFinished = false;
+  timeLeft = 30 * 60;
+  startTimer();
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('quiz').style.display = 'block';
+  render();
+}
+
+startTimer();
+</script>
+</body>
+</html>
