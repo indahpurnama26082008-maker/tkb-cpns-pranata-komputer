@@ -18,7 +18,7 @@ if(localStorage.getItem('cpns-logged')!=='1'){
 
 <!-- NAVBAR -->
 <nav class="navbar">
-<a class="nav-back" href="index.html">
+<a class="nav-back" href="dashboard.html">
 <i class="fas fa-arrow-left"></i> Dashboard
   </a>
 <div class="nav-title-area">
@@ -36,7 +36,7 @@ if(localStorage.getItem('cpns-logged')!=='1'){
 <!-- BREADCRUMB -->
 <div class="breadcrumb-bar">
 <i class="fas fa-home" style="font-size:.8rem"></i>
-<a class="bc-link" href="index.html">Dashboard</a>
+<a class="bc-link" href="dashboard.html">Dashboard</a>
 <span style="opacity:.4">›</span>
 <span style="color:var(--text);font-weight:600">Sesi 2 — Pengembangan &amp; Regulasi</span>
 </div>
@@ -78,6 +78,9 @@ if(localStorage.getItem('cpns-logged')!=='1'){
 <button class="btn btn-secondary" id="btn-stop" onclick="stopSession()">
 <i class="fas fa-stop-circle" style="margin-right:6px"></i>Berhenti
       </button>
+<button class="btn btn-warning" id="btn-skip" onclick="skipQ()" title="Lewati soal ini, bisa kembali nanti">
+<i class="fas fa-forward" style="margin-right:6px"></i>Lewati
+</button>
 <button class="btn btn-primary" disabled="" id="btn-nx" onclick="nextQ()">
         Berikutnya <i class="fas fa-arrow-right" style="margin-left:6px"></i>
 </button>
@@ -104,7 +107,7 @@ if(localStorage.getItem('cpns-logged')!=='1'){
 <button class="btn btn-primary" onclick="document.getElementById('rev').scrollIntoView({behavior:'smooth'})">
 <i class="fas fa-list-check" style="margin-right:6px"></i>Review Jawaban
         </button>
-<a class="btn btn-secondary" href="index.html">
+<a class="btn btn-secondary" href="dashboard.html">
 <i class="fas fa-home" style="margin-right:6px"></i>Dashboard
         </a>
 </div>
@@ -342,6 +345,7 @@ const Q = [
 const SESSION_KEY = 'sesi-2';
 let cur = 0, ok = 0, no = 0, expVis = false;
 let answered = [];
+let skipped = [];
 
 // ===== THEME =====
 function toggleDark() {
@@ -408,7 +412,9 @@ function render() {
   document.getElementById('s-cur').textContent = cur+1;
   document.getElementById('s-ok').textContent = ok;
   document.getElementById('s-no').textContent = no;
-  document.getElementById('s-rem').textContent = Q.length - cur;
+  document.getElementById('s-rem').textContent = getUnansweredIndices().length;
+  const skipBtn = document.getElementById('btn-skip');
+  if (skipBtn) { skipBtn.style.display = answered.some(a=>a.qi===cur) ? 'none' : 'inline-flex'; }
   document.getElementById('prog').style.width = ((cur/Q.length)*100)+'%';
   document.getElementById('sess-label').innerHTML = 
     'Sesi <strong>2</strong> &bull; Soal <strong>'+(cur+1)+'</strong> dari <strong>'+Q.length+'</strong>';
@@ -449,6 +455,8 @@ function pick(idx) {
   document.getElementById('s-ok').textContent = ok;
   document.getElementById('s-no').textContent = no;
   document.getElementById('btn-nx').disabled = false;
+  const skipBtn = document.getElementById('btn-skip');
+  if (skipBtn) skipBtn.style.display = 'none';
   document.getElementById('btn-exp').style.display = 'inline-flex';
   document.getElementById('exp').classList.add('show');
   document.getElementById('btn-exp').innerHTML = '<i class="fas fa-eye-slash" style="margin-right:6px"></i>Sembunyikan';
@@ -463,9 +471,56 @@ function toggleExp() {
     : '<i class="fas fa-lightbulb" style="margin-right:6px"></i>Pembahasan';
 }
 
+function skipQ() {
+  if (!skipped.includes(cur)) {
+    skipped.push(cur);
+  }
+  // Move to next unanswered, or first skipped if all done
+  let next = findNextUnanswered(cur + 1);
+  if (next === -1) {
+    // Check if there are skipped questions left
+    const unanswered = getUnansweredIndices();
+    if (unanswered.length > 0) {
+      next = unanswered[0];
+    }
+  }
+  if (next === -1) {
+    showResult();
+  } else {
+    cur = next;
+    render();
+  }
+}
+
+function getUnansweredIndices() {
+  const answeredIdx = answered.map(a => a.qi);
+  return Q.map((_,i) => i).filter(i => !answeredIdx.includes(i));
+}
+
+function findNextUnanswered(from) {
+  const answeredIdx = answered.map(a => a.qi);
+  for (let i = from; i < Q.length; i++) {
+    if (!answeredIdx.includes(i)) return i;
+  }
+  return -1;
+}
+
 function nextQ() {
-  cur++;
-  if (cur >= Q.length) showResult(); else render();
+  skipped = skipped.filter(s => s !== cur);
+  let next = findNextUnanswered(cur + 1);
+  if (next === -1) {
+    // Check from beginning for any skipped/unanswered
+    const unanswered = getUnansweredIndices();
+    if (unanswered.length > 0) {
+      next = unanswered[0];
+    }
+  }
+  if (next === -1) {
+    showResult();
+  } else {
+    cur = next;
+    render();
+  }
 }
 
 function showResult(forceStop = false) {

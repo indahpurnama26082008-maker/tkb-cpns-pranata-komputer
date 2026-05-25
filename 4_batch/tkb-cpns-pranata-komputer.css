@@ -335,4 +335,12 @@ body {
   .result-stats { gap: 10px; }
   .rstat-val { font-size: 1.4rem; }
 }
-
+.btn-warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+  border: none;
+}
+.btn-warning:hover {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  transform: translateY(-1px);
+}
